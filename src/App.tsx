@@ -4,7 +4,7 @@ import { Matrix, mkCell, mkEmpty } from './app/Matrix';
 import { Coord, Sheet } from './sheet/Sheet';
 
 const width = 10;
-const height = 10;
+const height = 20;
 const emptyMatrix: Matrix = range(0, height).map(() => range(0, width).map(mkEmpty));
 
 export function App() {

@@ -1,6 +1,6 @@
 import { useState } from "react";
 import styled from "styled-components";
-import { MatrixCell } from "../app/Matrix";
+import { CellType, MatrixCell } from "../app/Matrix";
 import { Coord } from "./Sheet";
 
 interface EditorProps {
@@ -15,7 +15,7 @@ export const Editor = ({value, coord, onChange}: EditorProps) => {
   return (
     <EditorEl
       value={cellValue(value, focused)}
-      isError={value.type === "error"}
+      cellType={value.type}
       onChange={(e) => onChange(e.target.value, coord)}
       onFocus={() => setFocused(true)}
       onBlur={() => setFocused(false)}
@@ -23,10 +23,21 @@ export const Editor = ({value, coord, onChange}: EditorProps) => {
   );
 };
 
-const EditorEl = styled.input<{isError: boolean}>`
+const EditorEl = styled.input<{cellType: CellType}>`
   width: 70px;
-  border-color: ${(props) => props.isError ? 'red' : 'default'};
+  border-style: solid;
+  border-width: 1px;
+  border-color: ${({cellType}) => cellColor(cellType)};
 `;
+
+const cellColor = (type: CellType): string => {
+  switch (type) {
+    case "empty": return "default";
+    case "number": return "default";
+    case "formula": return "#7ca2ce";
+    case "error": return "red";
+  }
+}
 
 const cellValue = (cell: MatrixCell, focused: boolean): string => {
   switch (cell.type) {

@@ -6,6 +6,8 @@ export type ErrorCell = {type: "error", value: string};
 export type MatrixCell = NumberCell | FormulaCell | ErrorCell | EmptyCell;
 export type Matrix = MatrixCell[][];
 
+export type CellType = "number" | "error" | "formula" | "empty";
+
 export const mkNumber = (value: number): NumberCell => ({type: "number", value});
 export const mkFormula = (formula: string, value: number): FormulaCell => ({type: "formula", formula, value});
 export const mkError = (value: string): ErrorCell => ({type: "error", value});

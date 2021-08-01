@@ -1,12 +1,8 @@
 import React from 'react';
-import styled from 'styled-components';
-
-const Div = styled.div`color: red;`;
+import { Sheet } from './sheet/Sheet';
 
 export function App() {
   return (
-    <Div>
-      Hello world!
-    </Div>
+    <Sheet width={10} height={10} />
   );
 }

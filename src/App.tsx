@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { CellMap, mkCell } from './app/cells';
-import { evalCell } from './app/eval';
+import { evalCell, evalDeps } from './app/eval';
 import { updateMap } from './app/util';
 import { Sheet } from './sheet/Sheet';
 
@@ -12,8 +12,9 @@ export function App() {
   const [cells, setCells] = useState(emptyCells);
 
   const setValue = (value: string, name: string) => {
-    const map = updateMap(name, mkCell(value), cells);
-    setCells(evalCell(name, map));
+    const cells2 = updateMap(name, mkCell(value), cells);
+    const cells3 = evalCell(name, cells2);
+    setCells(evalDeps(name, cells3));
   };
 
   return (

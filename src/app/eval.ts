@@ -16,13 +16,16 @@ const getCellValue = (name: string, cells: CellMap): number => {
   }
 }
 
-export const evalCell = (name: string, cells: CellMap): CellMap => {
+export const evalCell = (name: string, cells: CellMap, force: boolean = false): CellMap => {
   const c = getCell(name, cells);
-  if (c.type === "formula" && c.value === undefined) {
-    const cells2 = evalParams(c.params, cells);
-    const args = c.params.map((name) => getCellValue(name, cells2));
-    console.log(args);
-    return updateMap(name, evalFormulaCell(c, args), cells2);
+  if (c.type === "formula" && (c.value === undefined || force)) {
+    try {
+      const cells2 = evalParams(c.params, cells);
+      const args = c.params.map((name) => getCellValue(name, cells2));
+      return updateMap(name, evalFormulaCell(c, args), cells2);
+    } catch (e) {
+      return cells;
+    }
   }
   return cells;
 }
@@ -47,3 +50,17 @@ const callNumericFn = (fn: FormulaFn, args: number[]): number => {
     throw new Error("Formula doesn't evaluate to number");
   }
 }
+
+export const evalDeps = (name: string, cells: CellMap): CellMap => {
+  const deps = findDeps(name, cells);
+  // evaluate each dependent cell
+  const cells2 = deps.reduce((map, depName) => evalCell(depName, map, true), cells);
+  // then further evaluate dependents of these
+  return deps.reduce((map, depName) => evalDeps(depName, map), cells2);
+}
+
+const findDeps = (name: string, cells: CellMap): string[] => {
+  return Array.from(cells.entries())
+    .filter(([k,c]) => c.type === "formula" && c.params.some((p) => p === name))
+    .map(([k,v]) => k);
+};

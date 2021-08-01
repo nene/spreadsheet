@@ -4,7 +4,7 @@ export type EmptyCell = {type: "empty"};
 export type ErrorCell = {type: "error", value: string};
 
 export type MatrixCell = NumberCell | FormulaCell | ErrorCell | EmptyCell;
-export type Matrix = MatrixCell[][];
+export type Matrix = Map<string, MatrixCell>;
 
 export type CellType = "number" | "error" | "formula" | "empty";
 
@@ -29,6 +29,10 @@ export const mkCell = (s: string): MatrixCell => {
     }
   }
   return mkError(s);
+}
+
+export const getCell = (name: string, matrix: Matrix): MatrixCell => {
+  return matrix.get(name) || mkEmpty();
 }
 
 const evaluate = (formula: string): number => {

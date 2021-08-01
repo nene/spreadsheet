@@ -1,21 +1,21 @@
-import { range, update } from 'ramda';
 import React, { useState } from 'react';
-import { Matrix, mkCell, mkEmpty } from './app/Matrix';
-import { Coord, Sheet } from './sheet/Sheet';
+import { Matrix, mkCell } from './app/Matrix';
+import { Sheet } from './sheet/Sheet';
 
 const width = 10;
 const height = 20;
-const emptyMatrix: Matrix = range(0, height).map(() => range(0, width).map(mkEmpty));
+const emptyMatrix: Matrix = new Map();
 
 export function App() {
   const [matrix, setMatrix] = useState(emptyMatrix);
 
-  const setValue = (value: string, {x,y}: Coord) => {
-    const row = update(x, mkCell(value), matrix[y]);
-    setMatrix(update(y, row, matrix));
+  const setValue = (value: string, name: string) => {
+    const map = new Map(matrix);
+    map.set(name, mkCell(value));
+    setMatrix(map);
   };
 
   return (
-    <Sheet values={matrix} setValue={setValue} />
+    <Sheet values={matrix} width={width} height={height} setValue={setValue} />
   );
 }

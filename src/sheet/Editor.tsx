@@ -1,22 +1,21 @@
 import { useState } from "react";
 import styled from "styled-components";
 import { CellType, MatrixCell } from "../app/Matrix";
-import { Coord } from "./Sheet";
 
 interface EditorProps {
   value: MatrixCell;
-  coord: Coord;
-  onChange: (value: string, coord: Coord) => void;
+  name: string;
+  onChange: (value: string, name: string) => void;
 }
 
-export const Editor = ({value, coord, onChange}: EditorProps) => {
+export const Editor = ({value, name, onChange}: EditorProps) => {
   const [focused, setFocused] = useState(false);
 
   return (
     <EditorEl
       value={cellValue(value, focused)}
       cellType={value.type}
-      onChange={(e) => onChange(e.target.value, coord)}
+      onChange={(e) => onChange(e.target.value, name)}
       onFocus={() => setFocused(true)}
       onBlur={() => setFocused(false)}
     />

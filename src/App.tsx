@@ -6,7 +6,7 @@ const width = 10;
 const height = 10;
 
 export function App() {
-  const matrix = range(0, height).map(() => range(0, width));
+  const matrix = range(0, height).map(() => range(0, width).map(() => ""));
 
   return (
     <Sheet values={matrix} />

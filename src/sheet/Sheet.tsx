@@ -1,7 +1,7 @@
 import styled from "styled-components";
 
 interface SheetProps {
-  values: number[][];
+  values: string[][];
 }
 
 export const Sheet = ({values}: SheetProps) => {
@@ -16,7 +16,7 @@ export const Sheet = ({values}: SheetProps) => {
       {values.map((row, y) => (
         <tr>
           <Head>{y+1}</Head>
-          {row.map(() => (<Cell><Editor /></Cell>))}
+          {row.map((value) => (<Cell><Editor value={value} /></Cell>))}
         </tr>
       ))}
     </Table>

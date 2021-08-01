@@ -21,10 +21,19 @@ export const mkCell = (s: string): MatrixCell => {
   if (/^=.*$/.test(s)) {
     const formula = s.slice(1);
     try {
-      return mkFormula(formula, eval(formula));
+      return mkFormula(formula, evaluate(formula));
     } catch (e) {
       return mkError(s);
     }
   }
   return mkError(s);
+}
+
+const evaluate = (formula: string): number => {
+  const n = eval(formula);
+  if (typeof n === "number") {
+    return n;
+  } else {
+    throw new Error("Formula doesn't evaluate to number");
+  }
 }

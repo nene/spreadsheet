@@ -1,21 +1,21 @@
 import React, { useState } from 'react';
-import { Matrix, mkCell } from './app/Matrix';
+import { CellMap, mkCell } from './app/cells';
 import { Sheet } from './sheet/Sheet';
 
 const width = 10;
 const height = 20;
-const emptyMatrix: Matrix = new Map();
+const emptyCells: CellMap = new Map();
 
 export function App() {
-  const [matrix, setMatrix] = useState(emptyMatrix);
+  const [cells, setCells] = useState(emptyCells);
 
   const setValue = (value: string, name: string) => {
-    const map = new Map(matrix);
+    const map = new Map(cells);
     map.set(name, mkCell(value));
-    setMatrix(map);
+    setCells(map);
   };
 
   return (
-    <Sheet values={matrix} width={width} height={height} setValue={setValue} />
+    <Sheet cells={cells} width={width} height={height} setValue={setValue} />
   );
 }

@@ -3,8 +3,8 @@ export type FormulaCell = {type: "formula"; formula: string; value: number};
 export type EmptyCell = {type: "empty"};
 export type ErrorCell = {type: "error", value: string};
 
-export type MatrixCell = NumberCell | FormulaCell | ErrorCell | EmptyCell;
-export type Matrix = Map<string, MatrixCell>;
+export type Cell = NumberCell | FormulaCell | ErrorCell | EmptyCell;
+export type CellMap = Map<string, Cell>;
 
 export type CellType = "number" | "error" | "formula" | "empty";
 
@@ -13,7 +13,7 @@ export const mkFormula = (formula: string, value: number): FormulaCell => ({type
 export const mkError = (value: string): ErrorCell => ({type: "error", value});
 export const mkEmpty = (): EmptyCell => ({type: "empty"});
 
-export const mkCell = (s: string): MatrixCell => {
+export const mkCell = (s: string): Cell => {
   if (s === "") {
     return mkEmpty();
   }
@@ -31,7 +31,7 @@ export const mkCell = (s: string): MatrixCell => {
   return mkError(s);
 }
 
-export const getCell = (name: string, matrix: Matrix): MatrixCell => {
+export const getCell = (name: string, matrix: CellMap): Cell => {
   return matrix.get(name) || mkEmpty();
 }
 

@@ -1,18 +1,18 @@
 import { range } from "ramda";
 import styled from "styled-components";
-import { getCell, Matrix } from "../app/Matrix";
+import { getCell, CellMap } from "../app/cells";
 import { Editor } from "./Editor";
 
 export type Coord = { x: number; y: number };
 
 interface SheetProps {
-  values: Matrix;
+  cells: CellMap;
   width: number;
   height: number;
   setValue: (value: string, name: string) => void;
 }
 
-export const Sheet = ({values, width, height, setValue}: SheetProps) => {
+export const Sheet = ({cells, width, height, setValue}: SheetProps) => {
   return (
     <Table>
       <tr>
@@ -28,7 +28,7 @@ export const Sheet = ({values, width, height, setValue}: SheetProps) => {
             const name = coordToName({x,y});
             return (
               <TableCell>
-                <Editor value={getCell(name, values)} name={name} onChange={setValue} />
+                <Editor value={getCell(name, cells)} name={name} onChange={setValue} />
               </TableCell>
             );
           })}

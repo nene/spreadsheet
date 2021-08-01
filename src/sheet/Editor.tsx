@@ -1,9 +1,9 @@
 import { useState } from "react";
 import styled from "styled-components";
-import { CellType, MatrixCell } from "../app/Matrix";
+import { CellType, Cell } from "../app/cells";
 
 interface EditorProps {
-  value: MatrixCell;
+  value: Cell;
   name: string;
   onChange: (value: string, name: string) => void;
 }
@@ -43,7 +43,7 @@ const cellColor = (type: CellType): string => {
   }
 }
 
-const cellValue = (cell: MatrixCell, focused: boolean): string => {
+const cellValue = (cell: Cell, focused: boolean): string => {
   switch (cell.type) {
     case "empty": return "";
     case "number": return String(cell.value);

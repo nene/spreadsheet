@@ -1,5 +1,6 @@
 import styled from "styled-components";
-import { Matrix, MatrixCell } from "../app/Matrix";
+import { Matrix } from "../app/Matrix";
+import { Editor } from "./Editor";
 
 export type Coord = { x: number; y: number };
 
@@ -46,28 +47,6 @@ const Head = styled.th`
 const TopHead = styled(Head)`
   text-align: center;
 `;
-
-interface EditorProps {
-  value: MatrixCell;
-  coord: Coord;
-  onChange: (value: string, coord: Coord) => void;
-}
-
-const Editor = ({value, coord, onChange}: EditorProps) => (
-  <EditorEl value={cellValue(value)} onChange={(e) => onChange(e.target.value, coord)} />
-);
-
-const EditorEl = styled.input`
-  width: 70px;
-`;
-
-const cellValue = (cell: MatrixCell): string => {
-  switch (cell.type) {
-    case "empty": return "";
-    case "number": return String(cell.value);
-    case "formula": return String(cell.value);
-  }
-}
 
 const numToAlpha = (n: number): string => {
   return "ABCDEFGHIJKLMNOPQRSTUVWXYZ".charAt(n);

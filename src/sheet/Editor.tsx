@@ -9,11 +9,16 @@ interface EditorProps {
 }
 
 export const Editor = ({value, coord, onChange}: EditorProps) => (
-  <EditorEl value={cellValue(value)} onChange={(e) => onChange(e.target.value, coord)} />
+  <EditorEl
+    value={cellValue(value)}
+    isError={value.type === "error"}
+    onChange={(e) => onChange(e.target.value, coord)}
+  />
 );
 
-const EditorEl = styled.input`
+const EditorEl = styled.input<{isError: boolean}>`
   width: 70px;
+  border-color: ${(props) => props.isError ? 'red' : 'default'};
 `;
 
 const cellValue = (cell: MatrixCell): string => {
@@ -21,5 +26,6 @@ const cellValue = (cell: MatrixCell): string => {
     case "empty": return "";
     case "number": return String(cell.value);
     case "formula": return String(cell.value);
+    case "error": return cell.value;
   }
 }

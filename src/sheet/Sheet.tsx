@@ -1,9 +1,10 @@
 import styled from "styled-components";
+import { Matrix, MatrixCell } from "../app/Matrix";
 
 export type Coord = { x: number; y: number };
 
 interface SheetProps {
-  values: string[][];
+  values: Matrix;
   setValue: (value: string, coord: Coord) => void;
 }
 
@@ -19,7 +20,7 @@ export const Sheet = ({values, setValue}: SheetProps) => {
       {values.map((row, y) => (
         <tr>
           <Head>{y+1}</Head>
-          {row.map((value, x) => (<Cell><Editor value={value} onChange={(e) => setValue(e.target.value, {x, y})} /></Cell>))}
+          {row.map((value, x) => (<Cell><Editor value={value} coord={{x,y}} onChange={setValue} /></Cell>))}
         </tr>
       ))}
     </Table>
@@ -46,9 +47,27 @@ const TopHead = styled(Head)`
   text-align: center;
 `;
 
-const Editor = styled.input`
+interface EditorProps {
+  value: MatrixCell;
+  coord: Coord;
+  onChange: (value: string, coord: Coord) => void;
+}
+
+const Editor = ({value, coord, onChange}: EditorProps) => (
+  <EditorEl value={cellValue(value)} onChange={(e) => onChange(e.target.value, coord)} />
+);
+
+const EditorEl = styled.input`
   width: 70px;
 `;
+
+const cellValue = (cell: MatrixCell): string => {
+  switch (cell.type) {
+    case "empty": return "";
+    case "number": return String(cell.value);
+    case "formula": return String(cell.value);
+  }
+}
 
 const numToAlpha = (n: number): string => {
   return "ABCDEFGHIJKLMNOPQRSTUVWXYZ".charAt(n);

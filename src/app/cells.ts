@@ -66,15 +66,17 @@ const extractParams = (formula: string): string[] => {
 export const evalCell = (name: string, cells: CellMap): CellMap => {
   const c = getCell(name, cells);
   if (c.type === "formula" && c.value === undefined) {
-    let newCell: Cell;
-    try {
-      newCell = {...c, value: evaluate(c.fn)};
-    } catch (e) {
-      newCell = mkError(c.formula);
-    }
     const map = new Map(cells);
-    map.set(name, newCell);
+    map.set(name, evalFormulaCell(c));
     return map;
   }
   return cells;
+}
+
+const evalFormulaCell = (cell: FormulaCell): FormulaCell | ErrorCell => {
+  try {
+    return {...cell, value: evaluate(cell.fn)};
+  } catch (e) {
+    return mkError(cell.formula);
+  }
 }

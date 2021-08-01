@@ -18,5 +18,13 @@ export const mkCell = (s: string): MatrixCell => {
   if (/^\d+$/.test(s)) {
     return mkNumber(parseInt(s, 10));
   }
+  if (/^=.*$/.test(s)) {
+    const formula = s.slice(1);
+    try {
+      return mkFormula(formula, eval(formula));
+    } catch (e) {
+      return mkError(s);
+    }
+  }
   return mkError(s);
 }

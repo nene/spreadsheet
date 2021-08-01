@@ -1,10 +1,13 @@
 import React from 'react';
+import styled from 'styled-components';
+
+const Div = styled.div`color: red`;
 
 function App() {
   return (
-    <div>
+    <Div>
       Hello world!
-    </div>
+    </Div>
   );
 }
 

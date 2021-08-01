@@ -49,7 +49,7 @@ const cellValue = (cell: Cell, focused: boolean): string => {
     case "number": return String(cell.value);
     case "formula": {
       if (focused) {
-        return "=" + cell.formula;
+        return cell.formula;
       } else {
         return String(cell.value);
       }

@@ -29,10 +29,9 @@ export const mkCell = (s: string): Cell => {
     return mkNumber(parseInt(s, 10));
   }
   if (/^=.*$/.test(s)) {
-    const formula = s.slice(1);
     try {
-      const [fn, params] = mkFunc(formula);
-      return mkFormula({formula, fn, params, value: evaluate(fn)});
+      const [fn, params] = mkFunc(s);
+      return mkFormula({formula: s, fn, params, value: 0});
     } catch (e) {
       return mkError(s);
     }
@@ -53,7 +52,8 @@ const evaluate = (fn: FormulaFn): number => {
   }
 }
 
-const mkFunc = (formula: string): [FormulaFn, string[]] => {
+const mkFunc = (rawFormula: string): [FormulaFn, string[]] => {
+  const formula = rawFormula.slice(1);
   const params = extractParams(formula);
   const fn = new Function(...params, `return ${formula};`) as FormulaFn;
   return [fn, params];
@@ -61,4 +61,20 @@ const mkFunc = (formula: string): [FormulaFn, string[]] => {
 
 const extractParams = (formula: string): string[] => {
   return formula.match(/[A-Z][0-9]+/g) || [];
+}
+
+export const evalCell = (name: string, cells: CellMap): CellMap => {
+  const c = getCell(name, cells);
+  if (c.type === "formula") {
+    let newCell: Cell;
+    try {
+      newCell = {...c, value: evaluate(c.fn)};
+    } catch (e) {
+      newCell = mkError(c.formula);
+    }
+    const map = new Map(cells);
+    map.set(name, newCell);
+    return map;
+  }
+  return cells;
 }

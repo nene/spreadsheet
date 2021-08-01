@@ -26,7 +26,11 @@ export const Sheet = ({values, width, height, setValue}: SheetProps) => {
           <Head>{y+1}</Head>
           {range(0, width).map((x) => {
             const name = coordToName({x,y});
-            return (<Cell><Editor value={getCell(name, values)} name={name} onChange={setValue} /></Cell>);
+            return (
+              <TableCell>
+                <Editor value={getCell(name, values)} name={name} onChange={setValue} />
+              </TableCell>
+            );
           })}
         </tr>
       ))}
@@ -38,7 +42,7 @@ const Table = styled.table`
   border-collapse: collapse;
 `;
 
-const Cell = styled.td`
+const TableCell = styled.td`
   border: none;
   padding: 0;
 `;

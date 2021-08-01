@@ -1,4 +1,5 @@
 import { Cell, CellMap, ErrorCell, FormulaCell, FormulaFn, mkEmpty, mkError } from "./cells";
+import { updateMap } from "./util";
 
 export const getCell = (name: string, matrix: CellMap): Cell => {
   return matrix.get(name) || mkEmpty();
@@ -7,9 +8,7 @@ export const getCell = (name: string, matrix: CellMap): Cell => {
 export const evalCell = (name: string, cells: CellMap): CellMap => {
   const c = getCell(name, cells);
   if (c.type === "formula" && c.value === undefined) {
-    const map = new Map(cells);
-    map.set(name, evalFormulaCell(c));
-    return map;
+    return updateMap(name, evalFormulaCell(c), cells);
   }
   return cells;
 }

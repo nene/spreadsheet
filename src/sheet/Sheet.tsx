@@ -1,16 +1,29 @@
-import { range } from "ramda";
 import styled from "styled-components";
 
-export const Sheet = ({width, height}: {width: number, height: number}) => {
+interface SheetProps {
+  values: number[][];
+}
+
+export const Sheet = ({values}: SheetProps) => {
   return (
-    <table>
-      {range(0, height).map(() => (
+    <Table>
+      {values.map((row) => (
         <tr>
-          {range(0, width).map(() => (<Cell>x</Cell>))}
+          {row.map(() => (<Cell><Editor /></Cell>))}
         </tr>
       ))}
-    </table>
+    </Table>
   );
 }
 
-const Cell = styled.td``;
+const Table = styled.table`
+  border-collapse: collapse;
+`;
+
+const Cell = styled.td`
+  border: 1px solid #ccc;
+`;
+
+const Editor = styled.input`
+  width: 70px;
+`;

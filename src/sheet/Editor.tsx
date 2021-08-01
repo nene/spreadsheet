@@ -51,7 +51,7 @@ const cellValue = (cell: Cell, focused: boolean): string => {
       if (focused) {
         return cell.formula;
       } else {
-        return String(cell.value);
+        return String(cell.value ?? "#UNEVAL");
       }
     }
     case "error": return cell.value;

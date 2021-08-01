@@ -4,7 +4,7 @@ export type NumberCell = {type: "number"; value: number};
 export type FormulaCell = {
   type: "formula";
   formula: string;
-  value: number;
+  value?: number;
   fn: FormulaFn;
   params: string[];
 };
@@ -31,7 +31,7 @@ export const mkCell = (s: string): Cell => {
   if (/^=.*$/.test(s)) {
     try {
       const [fn, params] = mkFunc(s);
-      return mkFormula({formula: s, fn, params, value: 0});
+      return mkFormula({formula: s, fn, params, value: undefined});
     } catch (e) {
       return mkError(s);
     }
@@ -65,7 +65,7 @@ const extractParams = (formula: string): string[] => {
 
 export const evalCell = (name: string, cells: CellMap): CellMap => {
   const c = getCell(name, cells);
-  if (c.type === "formula") {
+  if (c.type === "formula" && c.value === undefined) {
     let newCell: Cell;
     try {
       newCell = {...c, value: evaluate(c.fn)};

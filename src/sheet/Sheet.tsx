@@ -1,10 +1,13 @@
 import styled from "styled-components";
 
+export type Coord = { x: number; y: number };
+
 interface SheetProps {
   values: string[][];
+  setValue: (value: string, coord: Coord) => void;
 }
 
-export const Sheet = ({values}: SheetProps) => {
+export const Sheet = ({values, setValue}: SheetProps) => {
   return (
     <Table>
       <tr>
@@ -16,7 +19,7 @@ export const Sheet = ({values}: SheetProps) => {
       {values.map((row, y) => (
         <tr>
           <Head>{y+1}</Head>
-          {row.map((value) => (<Cell><Editor value={value} /></Cell>))}
+          {row.map((value, x) => (<Cell><Editor value={value} onChange={(e) => setValue(e.target.value, {x, y})} /></Cell>))}
         </tr>
       ))}
     </Table>

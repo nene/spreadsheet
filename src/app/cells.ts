@@ -1,4 +1,4 @@
-type FormulaFn = (...args: number[]) => number;
+export type FormulaFn = (...args: number[]) => number;
 
 export type NumberCell = {type: "number"; value: number};
 export type FormulaCell = {
@@ -39,19 +39,6 @@ export const mkCell = (s: string): Cell => {
   return mkError(s);
 }
 
-export const getCell = (name: string, matrix: CellMap): Cell => {
-  return matrix.get(name) || mkEmpty();
-}
-
-const evaluate = (fn: FormulaFn): number => {
-  const n = fn();
-  if (typeof n === "number") {
-    return n;
-  } else {
-    throw new Error("Formula doesn't evaluate to number");
-  }
-}
-
 const mkFunc = (rawFormula: string): [FormulaFn, string[]] => {
   const formula = rawFormula.slice(1);
   const params = extractParams(formula);
@@ -61,22 +48,4 @@ const mkFunc = (rawFormula: string): [FormulaFn, string[]] => {
 
 const extractParams = (formula: string): string[] => {
   return formula.match(/[A-Z][0-9]+/g) || [];
-}
-
-export const evalCell = (name: string, cells: CellMap): CellMap => {
-  const c = getCell(name, cells);
-  if (c.type === "formula" && c.value === undefined) {
-    const map = new Map(cells);
-    map.set(name, evalFormulaCell(c));
-    return map;
-  }
-  return cells;
-}
-
-const evalFormulaCell = (cell: FormulaCell): FormulaCell | ErrorCell => {
-  try {
-    return {...cell, value: evaluate(cell.fn)};
-  } catch (e) {
-    return mkError(cell.formula);
-  }
 }

@@ -1,6 +1,7 @@
 import { range } from "ramda";
 import styled from "styled-components";
-import { getCell, CellMap } from "../app/cells";
+import { CellMap } from "../app/cells";
+import { getCell } from "../app/eval";
 import { Editor } from "./Editor";
 
 export type Coord = { x: number; y: number };

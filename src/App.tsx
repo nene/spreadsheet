@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { CellMap, evalCell, mkCell } from './app/cells';
+import { CellMap, mkCell } from './app/cells';
+import { evalCell } from './app/eval';
 import { Sheet } from './sheet/Sheet';
 
 const width = 10;

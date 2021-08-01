@@ -17,13 +17,7 @@ export type CellMap = Map<string, Cell>;
 export type CellType = "number" | "error" | "formula" | "empty";
 
 export const mkNumber = (value: number): NumberCell => ({type: "number", value});
-export const mkFormula = (formula: string, fn: FormulaFn, params: string[], value: number): FormulaCell => ({
-  type: "formula",
-  formula,
-  fn,
-  params,
-  value,
-});
+export const mkFormula = (fields: Omit<FormulaCell, 'type'>): FormulaCell => ({type: "formula", ...fields});
 export const mkError = (value: string): ErrorCell => ({type: "error", value});
 export const mkEmpty = (): EmptyCell => ({type: "empty"});
 
@@ -38,7 +32,7 @@ export const mkCell = (s: string): Cell => {
     const formula = s.slice(1);
     try {
       const [fn, params] = mkFunc(formula);
-      return mkFormula(formula, fn, params, evaluate(fn));
+      return mkFormula({formula, fn, params, value: evaluate(fn)});
     } catch (e) {
       return mkError(s);
     }

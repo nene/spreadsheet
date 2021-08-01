@@ -15,14 +15,14 @@ export const evalCell = (name: string, cells: CellMap): CellMap => {
 
 const evalFormulaCell = (cell: FormulaCell): FormulaCell | ErrorCell => {
   try {
-    return {...cell, value: evaluate(cell.fn)};
+    return {...cell, value: callNumericFn(cell.fn, [])};
   } catch (e) {
     return mkError(cell.formula);
   }
 }
 
-const evaluate = (fn: FormulaFn): number => {
-  const n = fn();
+const callNumericFn = (fn: FormulaFn, args: number[]): number => {
+  const n = fn(...args);
   if (typeof n === "number") {
     return n;
   } else {

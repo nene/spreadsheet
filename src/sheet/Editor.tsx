@@ -25,9 +25,14 @@ export const Editor = ({value, coord, onChange}: EditorProps) => {
 
 const EditorEl = styled.input<{cellType: CellType}>`
   width: 70px;
+  height: 20px;
   border-style: solid;
   border-width: 1px;
   border-color: ${({cellType}) => cellColor(cellType)};
+  &:focus {
+    border: 1px solid black;
+    outline: none;
+  }
 `;
 
 const cellColor = (type: CellType): string => {

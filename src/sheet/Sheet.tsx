@@ -33,11 +33,12 @@ const Table = styled.table`
 `;
 
 const Cell = styled.td`
-  border: 1px solid #ccc;
+  border: none;
+  padding: 0;
 `;
 
 const Head = styled.th`
-  border: 1px solid #ccc;
+  border: none;
   background-color: #ccc;
   padding: 0 4px;
   text-align: right;

@@ -44,6 +44,7 @@ export const mkCell = (s: string): Cell => {
 const mkFunc = (rawFormula: string): [FormulaFn, string[]] => {
   const formula = rawFormula.slice(1);
   const params = extractParams(formula);
+  // eslint-disable-next-line no-new-func
   const fn = new Function(...params, `return ${formula};`) as FormulaFn;
   return [fn, params];
 };

@@ -10,7 +10,7 @@ interface SheetProps {
   cells: CellMap;
   width: number;
   height: number;
-  setValue: (value: string, name: string) => void;
+  setValue: (name: string, value: string) => void;
 }
 
 export const Sheet = ({cells, width, height, setValue}: SheetProps) => {
@@ -29,7 +29,7 @@ export const Sheet = ({cells, width, height, setValue}: SheetProps) => {
             const name = coordToName({x,y});
             return (
               <TableCell>
-                <Editor value={getCell(name, cells)} name={name} onChange={setValue} />
+                <Editor name={name} value={getCell(name, cells)} onChange={setValue} />
               </TableCell>
             );
           })}

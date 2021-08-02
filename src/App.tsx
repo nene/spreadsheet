@@ -11,7 +11,7 @@ const emptyCells: CellMap = new Map();
 export function App() {
   const [cells, setCells] = useState(emptyCells);
 
-  const setValue = (value: string, name: string) => {
+  const setValue = (name: string, value: string) => {
     const cells2 = updateMap(name, mkCell(value), cells);
     const cells3 = evalCell(name, cells2);
     setCells(evalDeps(name, cells3));

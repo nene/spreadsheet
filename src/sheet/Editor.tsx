@@ -3,19 +3,19 @@ import styled from "styled-components";
 import { CellType, Cell } from "../app/cells";
 
 interface EditorProps {
-  value: Cell;
   name: string;
-  onChange: (value: string, name: string) => void;
+  value: Cell;
+  onChange: (name: string, value: string) => void;
 }
 
-export const Editor = ({value, name, onChange}: EditorProps) => {
+export const Editor = ({name, value, onChange}: EditorProps) => {
   const [focused, setFocused] = useState(false);
 
   return (
     <EditorEl
       value={cellValue(value, focused)}
       cellType={value.type}
-      onChange={(e) => onChange(e.target.value, name)}
+      onChange={(e) => onChange(name, e.target.value)}
       onFocus={() => setFocused(true)}
       onBlur={() => setFocused(false)}
     />

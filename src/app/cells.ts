@@ -1,3 +1,5 @@
+import { uniq } from "ramda";
+
 export type FormulaFn = (...args: number[]) => number;
 
 export type NumberCell = {type: "number"; value: number};
@@ -47,5 +49,5 @@ const mkFunc = (rawFormula: string): [FormulaFn, string[]] => {
 };
 
 const extractParams = (formula: string): string[] => {
-  return formula.match(/[A-Z][0-9]+/g) || [];
+  return uniq(formula.match(/[A-Z][0-9]+/g) || []);
 }

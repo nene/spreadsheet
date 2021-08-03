@@ -67,6 +67,23 @@ describe('updateCell()', () => {
         B3: {type: 'formula', formula: '=A1+A2', params: ['A1', 'A2'], fn: expect.any(Function), value: undefined},
       });
     });
+
+    it('formula computing to NaN -> undefined value', () => {
+      expect(updateCell('B3', '=A1/A2', {
+        A1: {type: 'number', value: 0},
+        A2: {type: 'number', value: 0},
+      })).toEqual({
+        A1: {type: 'number', value: 0},
+        A2: {type: 'number', value: 0},
+        B3: {type: 'formula', formula: '=A1/A2', params: ['A1', 'A2'], fn: expect.any(Function), value: undefined},
+      });
+    });
+
+    it('formula computing to non-numeric value -> undefined value', () => {
+      expect(updateCell('B3', '="..."', {})).toEqual({
+        B3: {type: 'formula', formula: '="..."', params: [], fn: expect.any(Function), value: undefined},
+      });
+    });
   });
 
   describe('when referenced field updated', () => {

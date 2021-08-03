@@ -1,4 +1,4 @@
-import { Cell, CellMap, ErrorCell, FormulaCell, FormulaFn, mkEmpty, mkError } from "./cells";
+import { Cell, CellMap, FormulaFn, mkEmpty } from "./cells";
 import { updateMap } from "./util";
 
 export const getCell = (name: string, cells: CellMap): Cell => {
@@ -21,20 +21,12 @@ export const evalCell = (name: string, cells: CellMap): CellMap => {
   if (c.type === "formula") {
     try {
       const args = c.params.map((name) => getCellValue(name, cells));
-      return updateMap(name, evalFormulaCell(c, args), cells);
+      return updateMap(name, {...c, value: callNumericFn(c.fn, args)}, cells);
     } catch (e) {
       return updateMap(name, {...c, value: undefined}, cells);
     }
   }
   return cells;
-}
-
-const evalFormulaCell = (cell: FormulaCell, args: number[]): FormulaCell | ErrorCell => {
-  try {
-    return {...cell, value: callNumericFn(cell.fn, args)};
-  } catch (e) {
-    return mkError(cell.formula);
-  }
 }
 
 const callNumericFn = (fn: FormulaFn, args: number[]): number => {

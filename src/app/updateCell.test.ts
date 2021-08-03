@@ -127,7 +127,7 @@ describe('updateCell()', () => {
     });
   });
 
-  describe.skip('when referenced field removed', () => {
+  describe('when referenced field removed', () => {
     it('recomputes formula to undefined value', () => {
       expect(updateCell('A2', '', {
         A1: {type: 'number', value: 1},
@@ -141,7 +141,7 @@ describe('updateCell()', () => {
     });
   });
 
-  describe.skip('when referenced field errors', () => {
+  describe('when referenced field errors', () => {
     it('recomputes formula to undefined value', () => {
       expect(updateCell('A2', '?blah?', {
         A1: {type: 'number', value: 1},

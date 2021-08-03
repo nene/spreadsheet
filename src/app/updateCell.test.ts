@@ -20,13 +20,13 @@ describe('updateCell()', () => {
       });
     });
 
-    it('formula cell and computes its value', () => {
+    it('formula cell -> computed value', () => {
       expect(updateCell('A1', '=1+2', {})).toEqual({
         A1: {type: 'formula', formula: '=1+2', params: [], fn: expect.any(Function), value: 3},
       });
     });
 
-    it('formula with field refs and computes its value', () => {
+    it('formula with field refs -> computed value', () => {
       expect(updateCell('B3', '=A1+A2', {
         A1: {type: 'number', value: 1},
         A2: {type: 'number', value: 2},
@@ -34,6 +34,37 @@ describe('updateCell()', () => {
         A1: {type: 'number', value: 1},
         A2: {type: 'number', value: 2},
         B3: {type: 'formula', formula: '=A1+A2', params: ['A1', 'A2'], fn: expect.any(Function), value: 3},
+      });
+    });
+
+    it('invalid formula -> error cell', () => {
+      expect(updateCell('B3', '=A1 { A2', {
+        A1: {type: 'number', value: 1},
+        A2: {type: 'number', value: 2},
+      })).toEqual({
+        A1: {type: 'number', value: 1},
+        A2: {type: 'number', value: 2},
+        B3: {type: 'error', value: '=A1 { A2'},
+      });
+    });
+
+    it('formula with empty field refs -> undefined value', () => {
+      expect(updateCell('B3', '=A1+A2', {
+        A1: {type: 'number', value: 1},
+      })).toEqual({
+        A1: {type: 'number', value: 1},
+        B3: {type: 'formula', formula: '=A1+A2', params: ['A1', 'A2'], fn: expect.any(Function), value: undefined},
+      });
+    });
+
+    it('formula with error field refs -> undefined value', () => {
+      expect(updateCell('B3', '=A1+A2', {
+        A1: {type: 'number', value: 1},
+        A2: {type: 'error', value: '?'},
+      })).toEqual({
+        A1: {type: 'number', value: 1},
+        A2: {type: 'error', value: '?'},
+        B3: {type: 'formula', formula: '=A1+A2', params: ['A1', 'A2'], fn: expect.any(Function), value: undefined},
       });
     });
   });
@@ -44,6 +75,18 @@ describe('updateCell()', () => {
         A1: {type: 'number', value: 1},
         A2: {type: 'number', value: 2},
         B3: {type: 'formula', formula: '=A1+A2', params: ['A1', 'A2'], fn: (a1,a2) => a1+a2, value: 3},
+      })).toEqual({
+        A1: {type: 'number', value: 1},
+        A2: {type: 'number', value: 20},
+        B3: {type: 'formula', formula: '=A1+A2', params: ['A1', 'A2'], fn: expect.any(Function), value: 21},
+      });
+    });
+
+    it('recomputes previously uncomputed formula', () => {
+      expect(updateCell('A2', '20', {
+        A1: {type: 'number', value: 1},
+        A2: {type: 'empty'},
+        B3: {type: 'formula', formula: '=A1+A2', params: ['A1', 'A2'], fn: (a1,a2) => a1+a2, value: undefined},
       })).toEqual({
         A1: {type: 'number', value: 1},
         A2: {type: 'number', value: 20},
@@ -80,6 +123,34 @@ describe('updateCell()', () => {
         B3: {type: 'formula', formula: '=A1+A2', params: ['A1', 'A2'], fn: expect.any(Function), value: 22},
         C3: {type: 'formula', formula: '=A1*A2', params: ['A1', 'A2'], fn: expect.any(Function), value: 40},
         D3: {type: 'formula', formula: '=B3+C3', params: ['B3', 'C3'], fn: expect.any(Function), value: 62},
+      });
+    });
+  });
+
+  describe.skip('when referenced field removed', () => {
+    it('recomputes formula to undefined value', () => {
+      expect(updateCell('A2', '', {
+        A1: {type: 'number', value: 1},
+        A2: {type: 'number', value: 2},
+        B3: {type: 'formula', formula: '=A1+A2', params: ['A1', 'A2'], fn: (a1,a2) => a1+a2, value: 3},
+      })).toEqual({
+        A1: {type: 'number', value: 1},
+        A2: {type: 'empty'},
+        B3: {type: 'formula', formula: '=A1+A2', params: ['A1', 'A2'], fn: expect.any(Function), value: undefined},
+      });
+    });
+  });
+
+  describe.skip('when referenced field errors', () => {
+    it('recomputes formula to undefined value', () => {
+      expect(updateCell('A2', '?blah?', {
+        A1: {type: 'number', value: 1},
+        A2: {type: 'number', value: 2},
+        B3: {type: 'formula', formula: '=A1+A2', params: ['A1', 'A2'], fn: (a1,a2) => a1+a2, value: 3},
+      })).toEqual({
+        A1: {type: 'number', value: 1},
+        A2: {type: 'error', value: '?blah?'},
+        B3: {type: 'formula', formula: '=A1+A2', params: ['A1', 'A2'], fn: expect.any(Function), value: undefined},
       });
     });
   });

@@ -7,6 +7,7 @@ export type FormulaCell = {
   type: "formula";
   formula: string;
   value?: number;
+  name?: string;
   fn: FormulaFn;
   params: string[];
 };
@@ -30,10 +31,10 @@ export const mkCell = (s: string): Cell => {
   if (/^\d+$/.test(s)) {
     return mkNumber(parseInt(s, 10));
   }
-  if (/^=.*$/.test(s)) {
+  if (/^([a-zA-Z_]\w*)?=.*$/.test(s)) {
     try {
-      const [fn, params] = mkFunc(s);
-      return mkFormula({formula: s, fn, params, value: undefined});
+      const [fn, params, name] = mkFunc(s);
+      return mkFormula({formula: s, fn, params, value: undefined, name});
     } catch (e) {
       return mkError(s);
     }
@@ -41,12 +42,12 @@ export const mkCell = (s: string): Cell => {
   return mkError(s);
 }
 
-const mkFunc = (rawFormula: string): [FormulaFn, string[]] => {
-  const formula = rawFormula.slice(1);
+const mkFunc = (rawFormula: string): [FormulaFn, string[], string | undefined] => {
+  const [name, formula] = rawFormula.split(/=/);
   const params = extractParams(formula);
   // eslint-disable-next-line no-new-func
   const fn = new Function(...params, `return ${formula};`) as FormulaFn;
-  return [fn, params];
+  return [fn, params, name === "" ? undefined : name];
 };
 
 const extractParams = (formula: string): string[] => {

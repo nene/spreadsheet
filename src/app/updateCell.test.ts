@@ -84,6 +84,12 @@ describe('updateCell()', () => {
         B3: {type: 'formula', formula: '="..."', params: [], fn: expect.any(Function), value: undefined},
       });
     });
+
+    it('named formula', () => {
+      expect(updateCell('A1', 'foo=1+2', {})).toEqual({
+        A1: {type: 'formula', formula: 'foo=1+2', params: [], fn: expect.any(Function), value: 3, name: 'foo'},
+      });
+    });
   });
 
   describe('when referenced field updated', () => {

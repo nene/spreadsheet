@@ -14,7 +14,7 @@ export type EmptyCell = {type: "empty"};
 export type ErrorCell = {type: "error", value: string};
 
 export type Cell = NumberCell | FormulaCell | ErrorCell | EmptyCell;
-export type CellMap = Map<string, Cell>;
+export type CellMap = Record<string, Cell>;
 
 export type CellType = "number" | "error" | "formula" | "empty";
 

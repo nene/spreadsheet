@@ -1,6 +1,4 @@
-// Immutable updating key in Map
-export const updateMap = <K,V>(key: K, value: V, map: Map<K,V>): Map<K,V> => {
-  const newMap = new Map(map);
-  newMap.set(key, value);
-  return newMap;
+// Immutable updating key in Object
+export const updateMap = <K extends string | number | symbol,V>(key: K, value: V, map: Record<K,V>): Record<K,V> => {
+  return {...map, [key]: value};
 };

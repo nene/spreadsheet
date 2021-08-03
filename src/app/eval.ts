@@ -2,7 +2,7 @@ import { Cell, CellMap, ErrorCell, FormulaCell, FormulaFn, mkEmpty, mkError } fr
 import { updateMap } from "./util";
 
 export const getCell = (name: string, cells: CellMap): Cell => {
-  return cells.get(name) || mkEmpty();
+  return cells[name] || mkEmpty();
 }
 
 const getCellValue = (name: string, cells: CellMap): number => {
@@ -60,7 +60,7 @@ export const evalDeps = (name: string, cells: CellMap): CellMap => {
 }
 
 const findDeps = (name: string, cells: CellMap): string[] => {
-  return Array.from(cells.entries())
+  return Object.entries(cells)
     .filter(([k,c]) => c.type === "formula" && c.params.some((p) => p === name))
     .map(([k,v]) => k);
 };

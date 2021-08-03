@@ -5,7 +5,7 @@ import { Sheet } from './sheet/Sheet';
 
 const width = 10;
 const height = 20;
-const emptyCells: CellMap = new Map();
+const emptyCells: CellMap = {};
 
 export function App() {
   const [cells, setCells] = useState(emptyCells);

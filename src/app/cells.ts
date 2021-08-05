@@ -11,6 +11,8 @@ export type FormulaCell = {
   fn: FormulaFn;
   params: string[];
 };
+// Subtype of FormulaCell for convenience
+export type NamedFormulaCell = FormulaCell & {name: string};
 export type EmptyCell = {type: "empty"};
 export type ErrorCell = {type: "error", value: string};
 

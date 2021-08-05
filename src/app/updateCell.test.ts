@@ -193,4 +193,34 @@ describe('updateCell()', () => {
       });
     });
   });
+
+  describe('named formula', () => {
+    it('when name changed, updates formula and its reference', () => {
+      expect(updateCell('A1', 'total=32', {
+        A1: {type: 'formula', formula: 'sum=32', params: [], fn: expect.any(Function), value: 32, name: 'sum'},
+        sum: 'A1',
+      })).toEqual({
+        A1: {type: 'formula', formula: 'total=32', params: [], fn: expect.any(Function), value: 32, name: 'total'},
+        total: 'A1',
+      });
+    });
+
+    it('when name removed, updates formula and deletes its reference', () => {
+      expect(updateCell('A1', '=32', {
+        A1: {type: 'formula', formula: 'sum=32', params: [], fn: expect.any(Function), value: 32, name: 'sum'},
+        sum: 'A1',
+      })).toEqual({
+        A1: {type: 'formula', formula: '=32', params: [], fn: expect.any(Function), value: 32},
+      });
+    });
+
+    it('when deleted, also deletes its reference', () => {
+      expect(updateCell('A1', '', {
+        A1: {type: 'formula', formula: 'sum=32', params: [], fn: expect.any(Function), value: 32, name: 'sum'},
+        sum: 'A1',
+      })).toEqual({
+        A1: {type: 'empty'},
+      });
+    });
+  });
 });

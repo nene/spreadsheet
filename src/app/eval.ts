@@ -1,4 +1,5 @@
-import { Cell, CellMap, CellRef, FormulaFn, mkEmpty } from "./cells";
+import { uniq } from "ramda";
+import { Cell, CellMap, CellRef, FormulaFn, mkEmpty, NamedFormulaCell } from "./cells";
 import { updateMap } from "./util";
 
 export const getCell = (name: string, cells: CellMap): Cell => {
@@ -14,6 +15,9 @@ const isCellRef = (value: Cell | CellRef): value is CellRef =>
   typeof value === "string";
 
 const isCell = (value: Cell | CellRef): value is Cell => !isCellRef(value);
+
+export const isNamedFormula = (cell: Cell): cell is NamedFormulaCell =>
+  cell.type === "formula" && cell.name !== undefined;
 
 const getCellValue = (name: string, cells: CellMap): number => {
   const c = getCell(name, cells);
@@ -49,11 +53,19 @@ const callNumericFn = (fn: FormulaFn, args: number[]): number => {
 }
 
 export const evalDeps = (name: string, cells: CellMap): CellMap => {
-  const deps = findDeps(name, cells);
+  const deps = findAllDeps(name, cells);
   // evaluate each dependent cell
   const cells2 = deps.reduce((map, depName) => evalCell(depName, map), cells);
   // then further evaluate dependents of these
   return deps.reduce((map, depName) => evalDeps(depName, map), cells2);
+}
+
+const findAllDeps = (name: string, cells: CellMap): string[] => {
+  const cell = getCell(name, cells);
+  return uniq([
+    ...findDeps(name, cells),
+    ...(isNamedFormula(cell) ? findDeps(cell.name, cells) : [])
+  ]);
 }
 
 const findDeps = (name: string, cells: CellMap): string[] => {

@@ -166,6 +166,20 @@ describe('updateCell()', () => {
     });
   });
 
+  describe('when referenced named formula updated', () => {
+    it('recomputes formula', () => {
+      expect(updateCell('A1', 'foo=2', {
+        A1: {type: 'formula', formula: 'foo=10', params: [], fn: () => 10, value: 10, name: 'foo'},
+        foo: 'A1',
+        B2: {type: 'formula', formula: '=foo+2', params: ['foo'], fn: (foo) => foo+2, value: 12},
+      })).toEqual({
+        A1: {type: 'formula', formula: 'foo=2', params: [], fn: expect.any(Function), value: 2, name: 'foo'},
+        foo: 'A1',
+        B2: {type: 'formula', formula: '=foo+2', params: ['foo'], fn: expect.any(Function), value: 4},
+      });
+    });
+  });
+
   describe('when referenced field removed', () => {
     it('recomputes formula to undefined value', () => {
       expect(updateCell('A2', '', {

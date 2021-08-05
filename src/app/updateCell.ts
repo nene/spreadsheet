@@ -1,6 +1,6 @@
 import { dissoc } from "ramda";
-import { Cell, CellMap, mkCell, NamedFormulaCell } from "./cells";
-import { evalCell, evalDeps, getCell } from "./eval";
+import { Cell, CellMap, mkCell } from "./cells";
+import { evalCell, evalDeps, getCell, isNamedFormula } from "./eval";
 import { updateMap } from "./util";
 
 export const updateCell = (name: string, value: string, cells: CellMap): CellMap => {
@@ -30,5 +30,3 @@ const maybeDeleteOldRef = (oldCell: Cell, newCell: Cell, cells: CellMap): CellMa
   }
 }
 
-const isNamedFormula = (cell: Cell): cell is NamedFormulaCell =>
-  cell.type === "formula" && cell.name !== undefined;

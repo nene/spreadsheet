@@ -12,15 +12,30 @@ export const Editor = ({name, value, onChange}: EditorProps) => {
   const [focused, setFocused] = useState(false);
 
   return (
-    <EditorEl
-      value={cellValue(value, focused)}
-      cellType={value.type}
-      onChange={(e) => onChange(name, e.target.value)}
-      onFocus={() => setFocused(true)}
-      onBlur={() => setFocused(false)}
-    />
+    <>
+      {cellLabel(value) && !focused ? <Label>{cellLabel(value)}</Label> : undefined}
+      <EditorEl
+        value={cellValue(value, focused)}
+        cellType={value.type}
+        onChange={(e) => onChange(name, e.target.value)}
+        onFocus={() => setFocused(true)}
+        onBlur={() => setFocused(false)}
+      />
+    </>
   );
 };
+
+const Label = styled.span`
+  position: absolute;
+  top: 0;
+  right: 0;
+  color: #fff;
+  background-color: #2c8b7c;
+  font-size: 10px;
+  padding: 0 2px;
+  height: 11px;
+  line-height: 11px;
+`;
 
 const EditorEl = styled.input<{cellType: CellType}>`
   width: 70px;
@@ -33,6 +48,10 @@ const EditorEl = styled.input<{cellType: CellType}>`
     outline: none;
   }
 `;
+
+const cellLabel = (cell: Cell): string | undefined => {
+  return cell.type === "formula" ? cell.name : undefined;
+};
 
 const cellColor = (type: CellType): string => {
   switch (type) {

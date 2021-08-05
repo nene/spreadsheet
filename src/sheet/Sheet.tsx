@@ -44,6 +44,7 @@ const Table = styled.table`
 `;
 
 const TableCell = styled.td`
+  position: relative;
   border: none;
   padding: 0;
 `;

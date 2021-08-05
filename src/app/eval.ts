@@ -1,9 +1,19 @@
-import { Cell, CellMap, FormulaFn, mkEmpty } from "./cells";
+import { Cell, CellMap, CellRef, FormulaFn, mkEmpty } from "./cells";
 import { updateMap } from "./util";
 
 export const getCell = (name: string, cells: CellMap): Cell => {
-  return cells[name] || mkEmpty();
+  const value = cells[name];
+  if (isCellRef(value)) {
+    return getCell(value, cells);
+  } else {
+    return value || mkEmpty();
+  }
 }
+
+const isCellRef = (value: Cell | CellRef): value is CellRef =>
+  typeof value === "string";
+
+const isCell = (value: Cell | CellRef): value is Cell => !isCellRef(value);
 
 const getCellValue = (name: string, cells: CellMap): number => {
   const c = getCell(name, cells);
@@ -48,6 +58,6 @@ export const evalDeps = (name: string, cells: CellMap): CellMap => {
 
 const findDeps = (name: string, cells: CellMap): string[] => {
   return Object.entries(cells)
-    .filter(([k,c]) => c.type === "formula" && c.params.some((p) => p === name))
+    .filter(([k,c]) => isCell(c) && c.type === "formula" && c.params.some((p) => p === name))
     .map(([k,v]) => k);
 };

@@ -85,9 +85,25 @@ describe('updateCell()', () => {
       });
     });
 
-    it('named formula', () => {
+    it('named formula -> computed value', () => {
       expect(updateCell('A1', 'foo=1+2', {})).toEqual({
         A1: {type: 'formula', formula: 'foo=1+2', params: [], fn: expect.any(Function), value: 3, name: 'foo'},
+        foo: "A1",
+      });
+    });
+
+    it('formula referencing named variables -> computed value', () => {
+      expect(updateCell('A3', '=sum/count', {
+        A1: {type: 'formula', formula: 'sum=32', params: [], fn: expect.any(Function), value: 32, name: 'sum'},
+        sum: 'A1',
+        A2: {type: 'formula', formula: 'count=4', params: [], fn: expect.any(Function), value: 4, name: 'count'},
+        count: 'A2',
+      })).toEqual({
+        A1: {type: 'formula', formula: 'sum=32', params: [], fn: expect.any(Function), value: 32, name: 'sum'},
+        sum: 'A1',
+        A2: {type: 'formula', formula: 'count=4', params: [], fn: expect.any(Function), value: 4, name: 'count'},
+        count: 'A2',
+        A3: {type: 'formula', formula: '=sum/count', params: ['sum', 'count'], fn: expect.any(Function), value: 8},
       });
     });
   });

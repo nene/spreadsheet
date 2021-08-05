@@ -15,7 +15,8 @@ export type EmptyCell = {type: "empty"};
 export type ErrorCell = {type: "error", value: string};
 
 export type Cell = NumberCell | FormulaCell | ErrorCell | EmptyCell;
-export type CellMap = Record<string, Cell>;
+export type CellRef = string;
+export type CellMap = Record<string, Cell | CellRef>;
 
 export type CellType = "number" | "error" | "formula" | "empty";
 
@@ -51,5 +52,5 @@ const mkFunc = (rawFormula: string): [FormulaFn, string[], string | undefined] =
 };
 
 const extractParams = (formula: string): string[] => {
-  return uniq(formula.match(/[A-Z][0-9]+/g) || []);
+  return uniq(formula.match(/[A-Za-z_]\w*/g) || []);
 }

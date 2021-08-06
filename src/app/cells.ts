@@ -17,8 +17,8 @@ export type EmptyCell = {type: "empty"};
 export type ErrorCell = {type: "error", value: string};
 
 export type Cell = NumberCell | FormulaCell | ErrorCell | EmptyCell;
-export type CellRef = string;
-export type CellMap = Record<string, Cell | CellRef>;
+export type CellCoord = string; // like "A1", "C5", ...
+export type CellMap = Record<string, Cell | CellCoord>;
 
 export type CellType = "number" | "error" | "formula" | "empty";
 

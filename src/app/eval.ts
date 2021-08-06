@@ -1,19 +1,19 @@
 import { assoc, uniq } from "ramda";
-import { Cell, CellMap, CellRef, FormulaFn, mkEmpty, NamedFormulaCell } from "./cells";
+import { Cell, CellMap, CellCoord, FormulaFn, mkEmpty, NamedFormulaCell } from "./cells";
 
 export const getCell = (name: string, cells: CellMap): Cell => {
   const value = cells[name];
-  if (isCellRef(value)) {
+  if (isCellCoord(value)) {
     return getCell(value, cells);
   } else {
     return value || mkEmpty();
   }
 }
 
-const isCellRef = (value: Cell | CellRef): value is CellRef =>
+const isCellCoord = (value: Cell | CellCoord): value is CellCoord =>
   typeof value === "string";
 
-const isCell = (value: Cell | CellRef): value is Cell => !isCellRef(value);
+const isCell = (value: Cell | CellCoord): value is Cell => !isCellCoord(value);
 
 export const isNamedFormula = (cell: Cell): cell is NamedFormulaCell =>
   cell.type === "formula" && cell.name !== undefined;

@@ -1,7 +1,6 @@
-import { dissoc } from "ramda";
+import { assoc, dissoc } from "ramda";
 import { Cell, CellMap, mkCell } from "./cells";
 import { evalCell, evalDeps, getCell, isNamedFormula } from "./eval";
-import { updateMap } from "./util";
 
 export const updateCell = (name: string, value: string, cells: CellMap): CellMap => {
   const cells2 = updateCellAndRef(name, value, cells);
@@ -16,9 +15,9 @@ const updateCellAndRef = (name: string, value: string, cells: CellMap): CellMap 
   const cleanCells = maybeDeleteOldRef(oldCell, newCell, cells);
 
   if (isNamedFormula(newCell)) {
-    return updateMap(newCell.name, name, updateMap(name, newCell, cleanCells));
+    return assoc(newCell.name, name, assoc(name, newCell, cleanCells));
   } else {
-    return updateMap(name, newCell, cleanCells);
+    return assoc(name, newCell, cleanCells);
   }
 };
 
@@ -29,4 +28,3 @@ const maybeDeleteOldRef = (oldCell: Cell, newCell: Cell, cells: CellMap): CellMa
     return cells;
   }
 }
-

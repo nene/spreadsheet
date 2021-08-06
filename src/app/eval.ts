@@ -1,6 +1,5 @@
-import { uniq } from "ramda";
+import { assoc, uniq } from "ramda";
 import { Cell, CellMap, CellRef, FormulaFn, mkEmpty, NamedFormulaCell } from "./cells";
-import { updateMap } from "./util";
 
 export const getCell = (name: string, cells: CellMap): Cell => {
   const value = cells[name];
@@ -35,9 +34,9 @@ export const evalCell = (name: string, cells: CellMap): CellMap => {
   if (c.type === "formula") {
     try {
       const args = c.params.map((name) => getCellValue(name, cells));
-      return updateMap(name, {...c, value: callNumericFn(c.fn, args)}, cells);
+      return assoc(name, {...c, value: callNumericFn(c.fn, args)}, cells);
     } catch (e) {
-      return updateMap(name, {...c, value: undefined}, cells);
+      return assoc(name, {...c, value: undefined}, cells);
     }
   }
   return cells;

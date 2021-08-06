@@ -178,6 +178,38 @@ describe('updateCell()', () => {
         B2: {type: 'formula', formula: '=foo+2', params: ['foo'], fn: expect.any(Function), value: 4},
       });
     });
+
+    it('recomputes previously uncomputed formula', () => {
+      expect(updateCell('A2', 'bar=20', {
+        A1: {type: 'formula', formula: 'foo=10', params: [], fn: () => 10, value: 10, name: 'foo'},
+        foo: 'A1',
+        A2: {type: 'formula', formula: 'b=20', params: [], fn: () => 20, value: 20, name: 'b'},
+        b: 'A2',
+        B3: {type: 'formula', formula: '=foo+bar', params: ['foo', 'bar'], fn: (foo,bar) => foo+bar, value: undefined},
+      })).toEqual({
+        A1: {type: 'formula', formula: 'foo=10', params: [], fn: expect.any(Function), value: 10, name: 'foo'},
+        foo: 'A1',
+        A2: {type: 'formula', formula: 'bar=20', params: [], fn: expect.any(Function), value: 20, name: 'bar'},
+        bar: 'A2',
+        B3: {type: 'formula', formula: '=foo+bar', params: ['foo', 'bar'], fn: expect.any(Function), value: 30},
+      });
+    });
+
+    it('recomputes chain of dependent formulas', () => {
+      expect(updateCell('A1', 'foo=20', {
+        A1: {type: 'formula', formula: 'foo=10', params: [], fn: () => 10, value: 10, name: 'foo'},
+        foo: 'A1',
+        A2: {type: 'formula', formula: 'bar=foo+1', params: ['foo'], fn: (foo) => foo+1, value: 11, name: 'bar'},
+        bar: 'A2',
+        B3: {type: 'formula', formula: '=bar+1', params: ['bar'], fn: (bar) => bar+1, value: 12},
+      })).toEqual({
+        A1: {type: 'formula', formula: 'foo=20', params: [], fn: expect.any(Function), value: 20, name: 'foo'},
+        foo: 'A1',
+        A2: {type: 'formula', formula: 'bar=foo+1', params: ['foo'], fn: expect.any(Function), value: 21, name: 'bar'},
+        bar: 'A2',
+        B3: {type: 'formula', formula: '=bar+1', params: ['bar'], fn: expect.any(Function), value: 22},
+      });
+    });
   });
 
   describe('when referenced field removed', () => {

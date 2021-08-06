@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { CellMap } from './app/cells';
+import { CellCoord, CellMap } from './app/cells';
 import { updateCell } from './app/updateCell';
 import { Sheet } from './sheet/Sheet';
 
@@ -10,8 +10,8 @@ const emptyCells: CellMap = {};
 export function App() {
   const [cells, setCells] = useState(emptyCells);
 
-  const setValue = (name: string, value: string) => {
-    setCells(updateCell(name, value, cells));
+  const setValue = (coord: CellCoord, value: string) => {
+    setCells(updateCell(coord, value, cells));
   };
 
   return (

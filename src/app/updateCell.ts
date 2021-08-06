@@ -1,25 +1,25 @@
 import { assoc, dissoc } from "ramda";
-import { Cell, CellMap, mkCell } from "./cells";
+import { Cell, CellCoord, CellMap, mkCell } from "./cells";
 import { evalCell, evalDeps, getCell, isNamedFormula } from "./eval";
 
-export const updateCell = (name: string, value: string, cells: CellMap): CellMap => {
-  const oldCell = getCell(name, cells);
+export const updateCell = (coord: CellCoord, value: string, cells: CellMap): CellMap => {
+  const oldCell = getCell(coord, cells);
 
-  const cells2 = updateCellAndRef(name, value, cells);
-  const cells3 = evalCell(name, cells2);
-  return evalDeps(name, maybeEvalOldDeps(oldCell, cells3));
+  const cells2 = updateCellAndRef(coord, value, cells);
+  const cells3 = evalCell(coord, cells2);
+  return evalDeps(coord, maybeEvalOldDeps(oldCell, cells3));
 };
 
-const updateCellAndRef = (name: string, value: string, cells: CellMap): CellMap => {
-  const oldCell = getCell(name, cells);
+const updateCellAndRef = (coord: CellCoord, value: string, cells: CellMap): CellMap => {
+  const oldCell = getCell(coord, cells);
   const newCell = mkCell(value);
 
   const cleanCells = maybeDeleteOldRef(oldCell, newCell, cells);
 
   if (isNamedFormula(newCell)) {
-    return assoc(newCell.name, name, assoc(name, newCell, cleanCells));
+    return assoc(newCell.name, coord, assoc(coord, newCell, cleanCells));
   } else {
-    return assoc(name, newCell, cleanCells);
+    return assoc(coord, newCell, cleanCells);
   }
 };
 

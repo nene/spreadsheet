@@ -3,9 +3,11 @@ import { Cell, CellMap, mkCell } from "./cells";
 import { evalCell, evalDeps, getCell, isNamedFormula } from "./eval";
 
 export const updateCell = (name: string, value: string, cells: CellMap): CellMap => {
+  const oldCell = getCell(name, cells);
+
   const cells2 = updateCellAndRef(name, value, cells);
   const cells3 = evalCell(name, cells2);
-  return evalDeps(name, cells3);
+  return evalDeps(name, maybeEvalOldDeps(oldCell, cells3));
 };
 
 const updateCellAndRef = (name: string, value: string, cells: CellMap): CellMap => {
@@ -28,3 +30,6 @@ const maybeDeleteOldRef = (oldCell: Cell, newCell: Cell, cells: CellMap): CellMa
     return cells;
   }
 }
+
+const maybeEvalOldDeps = (oldCell: Cell, cells: CellMap): CellMap =>
+  isNamedFormula(oldCell) ? evalDeps(oldCell.name, cells) : cells;

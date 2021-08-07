@@ -1,7 +1,9 @@
 import { configureStore, ThunkAction, Action } from '@reduxjs/toolkit';
+import focus from './focus';
 
 export const store = configureStore({
   reducer: {
+    focus,
   },
 });
 

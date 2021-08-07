@@ -1,15 +1,17 @@
-import { useState } from "react";
+import { useDispatch } from "react-redux";
 import styled from "styled-components";
 import { CellType, Cell, CellCoord } from "../app/cells";
+import { focusCell } from "../app/focus";
 
 interface EditorProps {
   coord: CellCoord;
   value: Cell;
+  focused: boolean;
   onChange: (coord: CellCoord, value: string) => void;
 }
 
-export const Editor = ({coord, value, onChange}: EditorProps) => {
-  const [focused, setFocused] = useState(false);
+export const Editor = ({coord, value, focused, onChange}: EditorProps) => {
+  const dispatch = useDispatch();
 
   return (
     <>
@@ -18,8 +20,7 @@ export const Editor = ({coord, value, onChange}: EditorProps) => {
         value={cellValue(value, focused)}
         cellType={value.type}
         onChange={(e) => onChange(coord, e.target.value)}
-        onFocus={() => setFocused(true)}
-        onBlur={() => setFocused(false)}
+        onFocus={() => dispatch(focusCell(coord))}
       />
     </>
   );

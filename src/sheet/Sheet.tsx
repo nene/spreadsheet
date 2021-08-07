@@ -1,16 +1,14 @@
 import { range } from "ramda";
 import styled from "styled-components";
-import { CellMap } from "../app/cells";
+import { CellCoord, CellMap } from "../app/cells";
 import { getCell } from "../app/eval";
 import { CellView } from "./CellView";
-
-export type Coord = { x: number; y: number };
 
 interface SheetProps {
   cells: CellMap;
   width: number;
   height: number;
-  setValue: (name: string, value: string) => void;
+  setValue: (coord: CellCoord, value: string) => void;
 }
 
 export const Sheet = ({cells, width, height, setValue}: SheetProps) => {
@@ -26,9 +24,9 @@ export const Sheet = ({cells, width, height, setValue}: SheetProps) => {
         <tr>
           <Head>{y+1}</Head>
           {range(0, width).map((x) => {
-            const name = coordToName({x,y});
+            const coord = makeCellCoord({x,y});
             return (
-              <CellView coord={name} value={getCell(name, cells)} onChange={setValue} />
+              <CellView coord={coord} value={getCell(coord, cells)} onChange={setValue} />
             );
           })}
         </tr>
@@ -53,7 +51,7 @@ const TopHead = styled(Head)`
   text-align: center;
 `;
 
-const coordToName = ({x,y}: Coord): string => {
+const makeCellCoord = ({x, y}: {x: number; y: number}): CellCoord => {
   return `${numToAlpha(x)}${y+1}`;
 }
 

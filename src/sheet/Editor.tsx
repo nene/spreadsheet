@@ -1,14 +1,14 @@
 import { useState } from "react";
 import styled from "styled-components";
-import { CellType, Cell } from "../app/cells";
+import { CellType, Cell, CellCoord } from "../app/cells";
 
 interface EditorProps {
-  name: string;
+  coord: CellCoord;
   value: Cell;
-  onChange: (name: string, value: string) => void;
+  onChange: (coord: CellCoord, value: string) => void;
 }
 
-export const Editor = ({name, value, onChange}: EditorProps) => {
+export const Editor = ({coord, value, onChange}: EditorProps) => {
   const [focused, setFocused] = useState(false);
 
   return (
@@ -17,7 +17,7 @@ export const Editor = ({name, value, onChange}: EditorProps) => {
       <EditorEl
         value={cellValue(value, focused)}
         cellType={value.type}
-        onChange={(e) => onChange(name, e.target.value)}
+        onChange={(e) => onChange(coord, e.target.value)}
         onFocus={() => setFocused(true)}
         onBlur={() => setFocused(false)}
       />

@@ -10,7 +10,7 @@ interface CellViewProps {
 
 export const CellView = ({coord, value, onChange}: CellViewProps) => (
   <TableCell>
-    <Editor name={coord} value={value} onChange={onChange} />
+    <Editor coord={coord} value={value} onChange={onChange} />
   </TableCell>
 );
 

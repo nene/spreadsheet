@@ -14,14 +14,14 @@ export const Sheet = ({width, height}: SheetProps) => {
       <tr>
         <Head></Head>
         {range(0, width).map((x) => (
-          <TopHead>{numToAlpha(x)}</TopHead>
+          <TopHead key={x}>{numToAlpha(x)}</TopHead>
         ))}
       </tr>
       {range(0, height).map((y) => (
-        <tr>
+        <tr key={y}>
           <Head>{y+1}</Head>
           {range(0, width).map((x) => (
-            <CellView coord={makeCellCoord({x,y})} />
+            <CellView key={`${y}_${x}`} coord={makeCellCoord({x,y})} />
           ))}
         </tr>
       ))}

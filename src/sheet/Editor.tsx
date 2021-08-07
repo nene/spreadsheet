@@ -1,6 +1,6 @@
 import { useDispatch } from "react-redux";
 import styled from "styled-components";
-import { CellType, Cell, CellCoord } from "../app/cells";
+import { CellType, Cell, CellCoord } from "../app/cells/cells";
 import { focusCell } from "../app/focus";
 
 interface EditorProps {

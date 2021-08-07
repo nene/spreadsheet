@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { CellCoord, CellMap } from './app/cells';
-import { updateCell } from './app/updateCell';
+import { CellCoord, CellMap } from './app/cells/cells';
+import { updateCell } from './app/cells/updateCell';
 import { Sheet } from './sheet/Sheet';
 
 const width = 10;

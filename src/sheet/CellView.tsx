@@ -1,6 +1,6 @@
 import { useSelector } from "react-redux";
 import styled from "styled-components";
-import { Cell, CellCoord } from "../app/cells";
+import { Cell, CellCoord } from "../app/cells/cells";
 import { selectFocusedCoord } from "../app/focus";
 import { Editor } from "./Editor";
 

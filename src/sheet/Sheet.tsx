@@ -1,7 +1,7 @@
 import { range } from "ramda";
 import styled from "styled-components";
-import { CellCoord, CellMap } from "../app/cells";
-import { getCell } from "../app/eval";
+import { CellCoord, CellMap } from "../app/cells/cells";
+import { getCell } from "../app/cells/eval";
 import { CellView } from "./CellView";
 
 interface SheetProps {

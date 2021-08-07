@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { CellCoord } from "./cells";
+import { CellCoord } from "./cells/cells";
 import { RootState } from "./store";
 
 interface FocusState {

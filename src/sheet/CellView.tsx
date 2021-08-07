@@ -2,7 +2,7 @@ import { useDispatch } from "react-redux";
 import styled from "styled-components";
 import { Cell, CellCoord, CellType } from "../app/cells/cells";
 import { selectCell, setCellValue } from "../app/cells/cellsSlice";
-import { focusCell, selectFocusedCoord } from "../app/focus";
+import { editCell, focusCell, selectEditableCoord, selectFocusedCoord } from "../app/focus";
 import { useAppSelector } from "../app/hooks";
 import { Editor } from "./Editor";
 
@@ -13,17 +13,21 @@ interface CellViewProps {
 export const CellView = ({coord}: CellViewProps) => {
   const cell = useAppSelector((state) => selectCell(state, coord));
   const focusedCoord = useAppSelector(selectFocusedCoord);
+  const editableCoord = useAppSelector(selectEditableCoord);
   const dispatch = useDispatch();
 
   return (
-    <TableCell onClick={() => dispatch(focusCell(coord))}>
-      {coord === focusedCoord
+    <TableCell
+      onClick={() => coord !== editableCoord && dispatch(focusCell(coord))}
+      onDoubleClick={() => dispatch(editCell(coord))}
+    >
+      {coord === editableCoord
         ? <Editor
           coord={coord}
           cell={cell}
           onChange={(value) => dispatch(setCellValue({coord, value}))}
         />
-        : <ValueView cell={cell} />}
+        : <ValueView cell={cell} focused={coord === focusedCoord} />}
     </TableCell>
   );
 };
@@ -33,21 +37,22 @@ const TableCell = styled.td`
   padding: 0;
 `;
 
-const ValueView = ({cell}: {cell: Cell}) => (
-  <ValueEl cellType={cell.type}>
+const ValueView = ({cell, focused}: {cell: Cell, focused: boolean}) => (
+  <ValueEl cellType={cell.type} focused={focused}>
     {cellLabel(cell) ? <Label>{cellLabel(cell)}</Label> : undefined}
     {cellValue(cell)}
   </ValueEl>
 );
 
-const ValueEl = styled.div<{cellType: CellType}>`
+const ValueEl = styled.div<{cellType: CellType, focused: boolean}>`
   position: relative;
   display: block;
   width: 70px;
   height: 20px;
   border-style: solid;
   border-width: 1px;
-  border-color: ${({cellType}) => cellColor(cellType)};
+  border-color: ${({cellType, focused}) => cellColor(cellType, focused)};
+  box-shadow: ${({focused}) => focused ? "1px 1px 4px #2c8b7c" : "none"};
   margin: 0;
   padding: 1px 2px;
 `;
@@ -68,7 +73,10 @@ const cellLabel = (cell: Cell): string | undefined => {
   return cell.type === "formula" ? cell.name : undefined;
 };
 
-const cellColor = (type: CellType): string => {
+const cellColor = (type: CellType, focused: boolean): string => {
+  if (focused) {
+    return "#4b882e";
+  }
   switch (type) {
     case "empty": return "#ccc";
     case "number": return "#ccc";

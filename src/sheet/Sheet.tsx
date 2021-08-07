@@ -11,20 +11,22 @@ interface SheetProps {
 export const Sheet = ({width, height}: SheetProps) => {
   return (
     <Table>
-      <tr>
-        <Head></Head>
-        {range(0, width).map((x) => (
-          <TopHead key={x}>{numToAlpha(x)}</TopHead>
-        ))}
-      </tr>
-      {range(0, height).map((y) => (
-        <tr key={y}>
-          <Head>{y+1}</Head>
+      <tbody>
+        <tr>
+          <Head></Head>
           {range(0, width).map((x) => (
-            <CellView key={`${y}_${x}`} coord={makeCellCoord({x,y})} />
+            <TopHead key={x}>{numToAlpha(x)}</TopHead>
           ))}
         </tr>
-      ))}
+        {range(0, height).map((y) => (
+          <tr key={y}>
+            <Head>{y+1}</Head>
+            {range(0, width).map((x) => (
+              <CellView key={`${y}_${x}`} coord={makeCellCoord({x,y})} />
+            ))}
+          </tr>
+        ))}
+      </tbody>
     </Table>
   );
 }

@@ -1,26 +1,23 @@
-import { useDispatch } from "react-redux";
 import styled from "styled-components";
 import { CellType, Cell, CellCoord } from "../app/cells/cells";
-import { focusCell } from "../app/focus";
 
 interface EditorProps {
   coord: CellCoord;
   value: Cell;
   focused: boolean;
-  onChange: (coord: CellCoord, value: string) => void;
+  onChange: (value: string) => void;
+  onFocus: () => void;
 }
 
-export const Editor = ({coord, value, focused, onChange}: EditorProps) => {
-  const dispatch = useDispatch();
-
+export const Editor = ({coord, value, focused, onChange, onFocus}: EditorProps) => {
   return (
     <>
       {cellLabel(value) && !focused ? <Label>{cellLabel(value)}</Label> : undefined}
       <EditorEl
         value={cellValue(value, focused)}
         cellType={value.type}
-        onChange={(e) => onChange(coord, e.target.value)}
-        onFocus={() => dispatch(focusCell(coord))}
+        onChange={(e) => onChange(e.target.value)}
+        onFocus={onFocus}
       />
     </>
   );

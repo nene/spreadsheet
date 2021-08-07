@@ -1,21 +1,29 @@
-import { useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import styled from "styled-components";
-import { Cell, CellCoord } from "../app/cells/cells";
-import { selectFocusedCoord } from "../app/focus";
+import { CellCoord } from "../app/cells/cells";
+import { selectCell, setCellValue } from "../app/cells/cellsSlice";
+import { focusCell, selectFocusedCoord } from "../app/focus";
+import { useAppSelector } from "../app/hooks";
 import { Editor } from "./Editor";
 
 interface CellViewProps {
   coord: CellCoord;
-  value: Cell;
-  onChange: (coord: CellCoord, value: string) => void;
 }
 
-export const CellView = ({coord, value, onChange}: CellViewProps) => {
-  const focusedCoord = useSelector(selectFocusedCoord);
+export const CellView = ({coord}: CellViewProps) => {
+  const cell = useAppSelector((state) => selectCell(state, coord));
+  const focusedCoord = useAppSelector(selectFocusedCoord);
+  const dispatch = useDispatch();
 
   return (
     <TableCell>
-      <Editor coord={coord} value={value} focused={coord === focusedCoord} onChange={onChange} />
+      <Editor
+        coord={coord}
+        value={cell}
+        focused={coord === focusedCoord}
+        onChange={(value) => dispatch(setCellValue({coord, value}))}
+        onFocus={() => dispatch(focusCell(coord))}
+      />
     </TableCell>
   );
 };

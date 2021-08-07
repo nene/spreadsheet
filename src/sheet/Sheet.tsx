@@ -1,17 +1,14 @@
 import { range } from "ramda";
 import styled from "styled-components";
-import { CellCoord, CellMap } from "../app/cells/cells";
-import { getCell } from "../app/cells/eval";
+import { CellCoord } from "../app/cells/cells";
 import { CellView } from "./CellView";
 
 interface SheetProps {
-  cells: CellMap;
   width: number;
   height: number;
-  setValue: (coord: CellCoord, value: string) => void;
 }
 
-export const Sheet = ({cells, width, height, setValue}: SheetProps) => {
+export const Sheet = ({width, height}: SheetProps) => {
   return (
     <Table>
       <tr>
@@ -23,12 +20,9 @@ export const Sheet = ({cells, width, height, setValue}: SheetProps) => {
       {range(0, height).map((y) => (
         <tr>
           <Head>{y+1}</Head>
-          {range(0, width).map((x) => {
-            const coord = makeCellCoord({x,y});
-            return (
-              <CellView coord={coord} value={getCell(coord, cells)} onChange={setValue} />
-            );
-          })}
+          {range(0, width).map((x) => (
+            <CellView coord={makeCellCoord({x,y})} />
+          ))}
         </tr>
       ))}
     </Table>

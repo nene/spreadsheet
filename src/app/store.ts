@@ -1,8 +1,10 @@
 import { configureStore, ThunkAction, Action } from '@reduxjs/toolkit';
 import focus from './focus';
+import cells from './cells/cellsSlice';
 
 export const store = configureStore({
   reducer: {
+    cells,
     focus,
   },
 });

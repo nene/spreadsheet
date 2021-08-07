@@ -2,7 +2,7 @@ import { range } from "ramda";
 import styled from "styled-components";
 import { CellMap } from "../app/cells";
 import { getCell } from "../app/eval";
-import { Editor } from "./Editor";
+import { CellView } from "./CellView";
 
 export type Coord = { x: number; y: number };
 
@@ -28,9 +28,7 @@ export const Sheet = ({cells, width, height, setValue}: SheetProps) => {
           {range(0, width).map((x) => {
             const name = coordToName({x,y});
             return (
-              <TableCell>
-                <Editor name={name} value={getCell(name, cells)} onChange={setValue} />
-              </TableCell>
+              <CellView coord={name} value={getCell(name, cells)} onChange={setValue} />
             );
           })}
         </tr>
@@ -41,12 +39,6 @@ export const Sheet = ({cells, width, height, setValue}: SheetProps) => {
 
 const Table = styled.table`
   border-collapse: collapse;
-`;
-
-const TableCell = styled.td`
-  position: relative;
-  border: none;
-  padding: 0;
 `;
 
 const Head = styled.th`

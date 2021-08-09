@@ -1,6 +1,6 @@
 import { range } from "ramda";
 import styled from "styled-components";
-import { CellCoord } from "../app/cells/cells";
+import { makeCellCoord, numToAlpha } from "../app/cells/coord";
 import { CellView } from "./CellView";
 
 interface SheetProps {
@@ -46,11 +46,3 @@ const Head = styled.th`
 const TopHead = styled(Head)`
   text-align: center;
 `;
-
-const makeCellCoord = ({x, y}: {x: number; y: number}): CellCoord => {
-  return `${numToAlpha(x)}${y+1}`;
-}
-
-const numToAlpha = (n: number): string => {
-  return "ABCDEFGHIJKLMNOPQRSTUVWXYZ".charAt(n);
-}

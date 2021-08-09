@@ -1,5 +1,7 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { max } from "ramda";
 import { CellCoord } from "./cells/cells";
+import { destructCellCoord, makeCellCoord } from "./cells/coord";
 import { RootState } from "./store";
 
 interface FocusState {
@@ -16,11 +18,22 @@ const focusSlice = createSlice({
     },
     editCell(state, action: PayloadAction<CellCoord>) {
       return {coord: action.payload, editable: true};
+    },
+    moveFocus(state, action: PayloadAction<{x: number, y: number}>) {
+      if (!state.coord) {
+        return state;
+      }
+      return {coord: coordPlus(state.coord, action.payload), editable: false};
     }
   },
 });
 
-export const { focusCell, editCell } = focusSlice.actions;
+const coordPlus = (coord: CellCoord, delta: {x: number, y: number}): CellCoord => {
+  const {x, y} = destructCellCoord(coord);
+  return makeCellCoord({x: max(0, x + delta.x), y: max(0, y + delta.y)});
+};
+
+export const { focusCell, editCell, moveFocus } = focusSlice.actions;
 export default focusSlice.reducer;
 
 export const selectFocusedCoord = (state: RootState) => state.focus.coord;

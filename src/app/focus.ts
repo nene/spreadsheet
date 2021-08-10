@@ -19,6 +19,9 @@ const focusSlice = createSlice({
     editCell(state, action: PayloadAction<CellCoord>) {
       return {coord: action.payload, editable: true};
     },
+    editFocusedCell(state, action: PayloadAction<void>) {
+      return {...state, editable: true};
+    },
     moveFocus(state, action: PayloadAction<{x: number, y: number}>) {
       if (!state.coord) {
         return state;
@@ -33,7 +36,7 @@ const coordPlus = (coord: CellCoord, delta: {x: number, y: number}): CellCoord =
   return makeCellCoord({x: max(0, x + delta.x), y: max(0, y + delta.y)});
 };
 
-export const { focusCell, editCell, moveFocus } = focusSlice.actions;
+export const { focusCell, editCell, editFocusedCell, moveFocus } = focusSlice.actions;
 export default focusSlice.reducer;
 
 export const selectFocusedCoord = (state: RootState) => state.focus.coord;

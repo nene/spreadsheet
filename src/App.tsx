@@ -11,6 +11,9 @@ export function App() {
   useEffect(() => {
     const body = document.getElementsByTagName('body')[0];
     body.addEventListener('keydown', (e) => {
+      if ((e.target as HTMLElement).tagName === 'INPUT') {
+        return;
+      }
       switch (e.key) {
         case 'ArrowUp': dispatch(moveFocus({x: 0, y: -1})); break;
         case 'ArrowDown': dispatch(moveFocus({x: 0, y: +1})); break;

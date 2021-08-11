@@ -5,28 +5,28 @@ import { destructCellCoord, makeCellCoord } from "./cells/coord";
 import { RootState } from "./store";
 
 interface FocusState {
-  coord?: CellCoord;
+  coords: CellCoord[];
   editable: boolean;
 }
 
 const focusSlice = createSlice({
   name: 'focus',
-  initialState: {editable: false} as FocusState,
+  initialState: {coords: [], editable: false} as FocusState,
   reducers: {
     focusCell(state, action: PayloadAction<CellCoord>) {
-      return {coord: action.payload, editable: false};
+      return {coords: [action.payload], editable: false};
     },
     editCell(state, action: PayloadAction<CellCoord>) {
-      return {coord: action.payload, editable: true};
+      return {coords: [action.payload], editable: true};
     },
     editFocusedCell(state, action: PayloadAction<void>) {
       return {...state, editable: true};
     },
     moveFocus(state, action: PayloadAction<{x: number, y: number}>) {
-      if (!state.coord) {
+      if (!state.coords.length) {
         return state;
       }
-      return {coord: coordPlus(state.coord, action.payload), editable: false};
+      return {coords: [coordPlus(state.coords[0], action.payload)], editable: false};
     }
   },
 });
@@ -39,5 +39,8 @@ const coordPlus = (coord: CellCoord, delta: {x: number, y: number}): CellCoord =
 export const { focusCell, editCell, editFocusedCell, moveFocus } = focusSlice.actions;
 export default focusSlice.reducer;
 
-export const selectFocusedCoord = (state: RootState) => state.focus.coord;
-export const selectEditableCoord = (state: RootState) => state.focus.editable ? state.focus.coord : undefined;
+export const selectFocusedCoord = (state: RootState): CellCoord | undefined =>
+  state.focus.coords[0];
+
+export const selectEditableCoord = (state: RootState): CellCoord | undefined =>
+  state.focus.editable ? state.focus.coords[0] : undefined;

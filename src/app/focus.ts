@@ -45,11 +45,8 @@ const coordPlus = (coord: CellCoord, delta: {x: number, y: number}): CellCoord =
 export const { focusCell, editCell, editFocusedCell, moveFocus, extendFocus } = focusSlice.actions;
 export default focusSlice.reducer;
 
-export const selectFocusedCoord = (state: RootState): CellCoord | undefined =>
-  state.focus.coords[0];
-
-export const selectLastFocusedCoord = (state: RootState): CellCoord | undefined =>
-  state.focus.coords[1];
+export const selectFocusedCoords = (state: RootState): CellCoord[] =>
+  state.focus.coords;
 
 export const selectEditableCoord = (state: RootState): CellCoord | undefined =>
   state.focus.editable ? state.focus.coords[0] : undefined;

@@ -3,7 +3,7 @@ import { useDispatch } from "react-redux";
 import styled from "styled-components";
 import { Cell, CellCoord, CellType } from "../app/cells/cells";
 import { selectCell, setCellValue } from "../app/cells/cellsSlice";
-import { editCell, extendFocus, focusCell, selectEditableCoord, selectFocusedCoord, selectLastFocusedCoord } from "../app/focus";
+import { editCell, extendFocus, focusCell, selectEditableCoord, selectFocusedCoords } from "../app/focus";
 import { useAppSelector } from "../app/hooks";
 import { Editor } from "./Editor";
 
@@ -13,8 +13,7 @@ interface CellViewProps {
 
 export const CellView = ({coord}: CellViewProps) => {
   const cell = useAppSelector((state) => selectCell(state, coord));
-  const focusedCoord = useAppSelector(selectFocusedCoord);
-  const focusedCoord2 = useAppSelector(selectLastFocusedCoord);
+  const [focusedCoord1, focusedCoord2] = useAppSelector(selectFocusedCoords);
   const editableCoord = useAppSelector(selectEditableCoord);
   const dispatch = useDispatch();
 
@@ -39,7 +38,7 @@ export const CellView = ({coord}: CellViewProps) => {
           cell={cell}
           onChange={(value) => dispatch(setCellValue({coord, value}))}
         />
-        : <ValueView cell={cell} focused={coord === focusedCoord} focusedLast={coord === focusedCoord2} />}
+        : <ValueView cell={cell} focused={coord === focusedCoord1} focusedLast={coord === focusedCoord2} />}
     </TableCell>
   );
 };

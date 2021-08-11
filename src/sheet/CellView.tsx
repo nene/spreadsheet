@@ -3,7 +3,7 @@ import { useDispatch } from "react-redux";
 import styled from "styled-components";
 import { Cell, CellCoord, CellType } from "../app/cells/cells";
 import { selectCell, setCellValue } from "../app/cells/cellsSlice";
-import { editCell, extendFocus, focusCell, selectEditableCoord, selectFocusedCoords } from "../app/focus";
+import { editCell, extendFocus, focusCell, selectEditableCoord, selectFocusedRange } from "../app/focus";
 import { useAppSelector } from "../app/hooks";
 import { Editor } from "./Editor";
 
@@ -13,7 +13,7 @@ interface CellViewProps {
 
 export const CellView = ({coord}: CellViewProps) => {
   const cell = useAppSelector((state) => selectCell(state, coord));
-  const [focusedCoord1, focusedCoord2] = useAppSelector(selectFocusedCoords);
+  const focusedRange = useAppSelector(selectFocusedRange);
   const editableCoord = useAppSelector(selectEditableCoord);
   const dispatch = useDispatch();
 
@@ -38,7 +38,7 @@ export const CellView = ({coord}: CellViewProps) => {
           cell={cell}
           onChange={(value) => dispatch(setCellValue({coord, value}))}
         />
-        : <ValueView cell={cell} focused={coord === focusedCoord1} focusedLast={coord === focusedCoord2} />}
+        : <ValueView cell={cell} focused={coord === focusedRange[0]} selected={focusedRange.includes(coord)} />}
     </TableCell>
   );
 };
@@ -48,21 +48,21 @@ const TableCell = styled.td`
   padding: 0;
 `;
 
-const ValueView = ({cell, focused, focusedLast}: {cell: Cell, focused: boolean, focusedLast: boolean}) => (
-  <ValueEl cellType={cell.type} focused={focused} focusedLast={focusedLast}>
+const ValueView = ({cell, focused, selected}: {cell: Cell, focused: boolean, selected: boolean}) => (
+  <ValueEl cellType={cell.type} focused={focused} selected={selected}>
     {cellLabel(cell) ? <Label>{cellLabel(cell)}</Label> : undefined}
     {cellValue(cell)}
   </ValueEl>
 );
 
-const ValueEl = styled.div<{cellType: CellType, focused: boolean, focusedLast: boolean}>`
+const ValueEl = styled.div<{cellType: CellType, focused: boolean, selected: boolean}>`
   position: relative;
   display: block;
   width: 70px;
   height: 20px;
   border-style: solid;
   border-width: 1px;
-  border-color: ${({cellType, focused, focusedLast}) => cellColor(cellType, focused || focusedLast)};
+  border-color: ${({cellType, focused, selected}) => cellColor(cellType, focused || selected)};
   box-shadow: ${({focused}) => focused ? "1px 1px 4px #2c8b7c" : "none"};
   margin: 0;
   padding: 1px 2px;

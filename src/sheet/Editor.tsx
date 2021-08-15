@@ -1,3 +1,4 @@
+import React from "react";
 import styled from "styled-components";
 import { Cell, CellCoord } from "../app/cells/cells";
 
@@ -5,14 +6,16 @@ interface EditorProps {
   coord: CellCoord;
   cell: Cell;
   onChange: (value: string) => void;
+  className?: string;
 }
 
-export const Editor = ({cell, onChange}: EditorProps) => {
+export const Editor = ({cell, className, onChange}: EditorProps) => {
   return (
     <EditorEl
       value={cellValue(cell)}
       onChange={(e) => onChange(e.target.value)}
       autoFocus={true}
+      className={className}
     />
   );
 };

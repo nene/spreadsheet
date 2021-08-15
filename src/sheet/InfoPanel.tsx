@@ -13,7 +13,7 @@ export const InfoPanel = () => {
   return (
     <InfoArea>
       <CoordLabel>{from}:</CoordLabel>
-      <Editor
+      <LongEditor
         coord={from}
         cell={cell}
         onChange={(value) => dispatch(setCellValue({coord: from, value}))}
@@ -34,4 +34,9 @@ const CoordLabel = styled.span`
   text-align: right;
   font-weight: 500;
   color: #1e4d33;
+`;
+
+const LongEditor = styled(Editor)`
+  width: 736px;
+  border-color: #5f5f5f;
 `;

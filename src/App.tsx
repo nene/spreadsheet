@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { editFocusedCell, moveFocus } from './app/focus';
+import { InfoPanel } from './sheet/InfoPanel';
 import { Sheet } from './sheet/Sheet';
 
 const width = 10;
@@ -29,6 +30,9 @@ export function App() {
   }, [dispatch]);
 
   return (
-    <Sheet width={width} height={height} />
+    <>
+      <InfoPanel />
+      <Sheet width={width} height={height} />
+    </>
   );
 }

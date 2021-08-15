@@ -7,6 +7,12 @@ export const store = configureStore({
     cells,
     focus,
   },
+  middleware: (getDefaultMiddleware) => getDefaultMiddleware({
+    // Ignore warning: A non-serializable value was detected in the state
+    serializableCheck: {
+      ignoredPaths: ['cells'],
+    },
+  }),
 });
 
 export type AppDispatch = typeof store.dispatch;

@@ -34,7 +34,6 @@ export const CellView = ({coord}: CellViewProps) => {
     >
       {coord === editableCoord
         ? <Editor
-          coord={coord}
           cell={cell}
           onChange={(value) => dispatch(setCellValue({coord, value}))}
         />

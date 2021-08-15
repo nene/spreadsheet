@@ -14,7 +14,6 @@ export const InfoPanel = () => {
     <InfoArea>
       <CoordLabel>{from}:</CoordLabel>
       <LongEditor
-        coord={from}
         cell={cell}
         onChange={(value) => dispatch(setCellValue({coord: from, value}))}
       />

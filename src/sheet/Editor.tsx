@@ -1,9 +1,8 @@
 import React from "react";
 import styled from "styled-components";
-import { Cell, CellCoord } from "../app/cells/cells";
+import { Cell } from "../app/cells/cells";
 
 interface EditorProps {
-  coord: CellCoord;
   cell: Cell;
   onChange: (value: string) => void;
   className?: string;

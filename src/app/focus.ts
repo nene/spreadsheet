@@ -26,7 +26,21 @@ const focusSlice = createSlice({
       return {coords: [coordPlus(state.coords[0], action.payload)], editable: false};
     },
     extendFocus(state, action: PayloadAction<CellCoord>) {
-      return {coords: [state.coords[0], action.payload], editable: false};
+      const c1 = state.coords[0];
+      const c2 = action.payload;
+      const {x: x1, y: y1} = destructCellCoord(c1);
+      const {x: x2, y: y2} = destructCellCoord(c2);
+
+      if (x1 === x2 && y1 === y2) {
+        return {coords: [c1], editable: false};
+      }
+      return {
+        coords: [
+          makeCellCoord({x: Math.min(x1, x2), y: Math.min(y1, y2)}),
+          makeCellCoord({x: Math.max(x1, x2), y: Math.max(y1, y2)}),
+        ],
+        editable: false
+      };
     }
   },
 });

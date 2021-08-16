@@ -91,12 +91,36 @@ describe('focus reducer', () => {
   });
 
   describe('extendFocus action', () => {
-    it('sets second coordinate', () => {
+    it('creates selection encompassing both coordinates', () => {
+      [
+        // larger on X & Y axis
+        {orig: 'A1', coord: 'B3', expected: ['A1', 'B3']},
+        {orig: 'A1', coord: 'A2', expected: ['A1', 'A2']},
+        {orig: 'A1', coord: 'B1', expected: ['A1', 'B1']},
+        // smaller on X & Y axis
+        {orig: 'B3', coord: 'A1', expected: ['A1', 'B3']},
+        {orig: 'B3', coord: 'B2', expected: ['B2', 'B3']},
+        {orig: 'B3', coord: 'A3', expected: ['A3', 'B3']},
+        // smaller on X, larger on Y axis
+        {orig: 'C3', coord: 'B4', expected: ['B3', 'C4']},
+        // larger on X, smaller on Y axis
+        {orig: 'C3', coord: 'D2', expected: ['C2', 'D3']},
+      ].forEach(({orig, coord, expected}) => {
+        expect(reducer(
+          {coords: [orig], editable: false},
+          extendFocus(coord)
+        )).toEqual(
+          {coords: expected, editable: false}
+        );
+      });
+    });
+
+    it('keeps single coordinate when the same coordinate given', () => {
       expect(reducer(
-        {coords: ['A1'], editable: false},
+        {coords: ['B3'], editable: false},
         extendFocus('B3')
       )).toEqual(
-        {coords: ['A1', 'B3'], editable: false}
+        {coords: ['B3'], editable: false}
       );
     });
 

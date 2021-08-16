@@ -11,7 +11,7 @@ interface FocusState {
 
 const focusSlice = createSlice({
   name: 'focus',
-  initialState: {coords: [], editable: false} as FocusState,
+  initialState: {coords: ['A1'], editable: false} as FocusState,
   reducers: {
     focusCell(state, action: PayloadAction<CellCoord>) {
       return {coords: [action.payload], editable: false};
@@ -23,15 +23,9 @@ const focusSlice = createSlice({
       return {...state, editable: true};
     },
     moveFocus(state, action: PayloadAction<{x: number, y: number}>) {
-      if (!state.coords.length) {
-        return state;
-      }
       return {coords: [coordPlus(state.coords[0], action.payload)], editable: false};
     },
     extendFocus(state, action: PayloadAction<CellCoord>) {
-      if (!state.coords.length) {
-        return state;
-      }
       return {coords: [state.coords[0], action.payload], editable: false};
     }
   },
@@ -51,10 +45,8 @@ export const selectFocusedCoords = (state: RootState): CellCoord[] =>
 export const selectFocusedRange = createSelector(selectFocusedCoords, ([from, to]) => {
   if (from && to) {
     return cellCoordRange(from, to);
-  } else if (from) {
-    return [from];
   } else {
-    return [];
+    return [from];
   }
 });
 

@@ -1,10 +1,19 @@
 import reducer, { editCell, editFocusedCell, extendFocus, focusCell, moveFocus } from "./focus";
 
 describe('focus reducer', () => {
+  it('defaults to first cell', () => {
+    expect(reducer(
+      undefined,
+      {type: 'INIT'}
+    )).toEqual(
+      {coords: ['A1'], editable: false}
+    );
+  });
+
   describe('focusCell action', () => {
     it('focuses to specified coordinate', () => {
       expect(reducer(
-        {coords: [], editable: false},
+        {coords: ['A1'], editable: false},
         focusCell('B2')
       )).toEqual(
         {coords: ['B2'], editable: false}
@@ -24,7 +33,7 @@ describe('focus reducer', () => {
   describe('editCell action', () => {
     it('sets specified cell as focused and editable', () => {
       expect(reducer(
-        {coords: [], editable: false},
+        {coords: ['A1'], editable: false},
         editCell('B2')
       )).toEqual(
         {coords: ['B2'], editable: true}
@@ -44,15 +53,6 @@ describe('focus reducer', () => {
   });
 
   describe('moveFocus action', () => {
-    it('does nothing when nothing focused', () => {
-      expect(reducer(
-        {coords: [], editable: false},
-        moveFocus({x: 1, y: 1})
-      )).toEqual(
-        {coords: [], editable: false}
-      );
-    });
-
     it('moves focused cell by specified amount', () => {
       [
         {from: 'C4', x: 0, y: 0, to: 'C4'},
@@ -91,15 +91,6 @@ describe('focus reducer', () => {
   });
 
   describe('extendFocus action', () => {
-    it('does nothing when nothing focused', () => {
-      expect(reducer(
-        {coords: [], editable: false},
-        extendFocus('B3')
-      )).toEqual(
-        {coords: [], editable: false}
-      );
-    });
-
     it('sets second coordinate', () => {
       expect(reducer(
         {coords: ['A1'], editable: false},

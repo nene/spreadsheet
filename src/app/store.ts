@@ -2,6 +2,7 @@ import { configureStore, AnyAction } from '@reduxjs/toolkit';
 import { combineEpics, createEpicMiddleware, Epic } from 'redux-observable';
 import focus, { focusEpic } from './focus';
 import cells from './cells/cellsSlice';
+import areas from './areas';
 
 const epicMiddleWare = createEpicMiddleware<AnyAction, AnyAction, any>();
 
@@ -9,6 +10,7 @@ export const store = configureStore({
   reducer: {
     cells,
     focus,
+    areas,
   },
   middleware: (getDefaultMiddleware) => [
     ...getDefaultMiddleware({

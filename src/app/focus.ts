@@ -1,8 +1,10 @@
 import { createSelector, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { max, min } from "ramda";
+import { ofType } from "redux-observable";
+import { map, withLatestFrom } from "rxjs";
 import { CellCoord } from "./cells/cells";
 import { cellCoordRange, destructCellCoord, makeCellCoord } from "./cells/coord";
-import { RootState } from "./store";
+import { AppEpic, RootState } from "./store";
 
 interface FocusState {
   coords: [CellCoord] | [CellCoord, CellCoord];
@@ -66,3 +68,13 @@ export const selectFocusedRange = createSelector(selectFocusedCoords, ([from, to
 
 export const selectEditableCoord = (state: RootState): CellCoord | undefined =>
   state.focus.editable ? state.focus.coords[0] : undefined;
+
+// type Side = 'TOP' | 'BOTTOM' | 'LEFT' | 'RIGHT';
+// type Focused = Record<CellCoord, Side[]>;
+
+export const focusEpic: AppEpic = (action$, state$) => action$.pipe(
+  ofType(extendFocus),
+  withLatestFrom(state$),
+  map(([_, state]) => selectFocusedCoords(state)),
+  map(([from, to]) => ({type: 'todo...'})),
+);

@@ -1,5 +1,6 @@
 import { useDispatch } from "react-redux";
 import styled from "styled-components";
+import { cellDisplayValue } from "../app/cells/cells";
 import { selectCell, setCellValue } from "../app/cells/cellsSlice";
 import { selectFocusedCoords } from "../app/focus";
 import { useAppSelector } from "../app/hooks";
@@ -14,7 +15,7 @@ export const InfoPanel = () => {
     <InfoArea>
       <CoordLabel>{from}:{to}</CoordLabel>
       <LongEditor
-        cell={cell}
+        value={cellDisplayValue(cell)}
         onChange={(value) => dispatch(setCellValue({coord: from, value}))}
       />
     </InfoArea>

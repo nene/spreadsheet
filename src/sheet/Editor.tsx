@@ -1,17 +1,16 @@
 import React from "react";
 import styled from "styled-components";
-import { Cell } from "../app/cells/cells";
 
 interface EditorProps {
-  cell: Cell;
+  value: string;
   onChange: (value: string) => void;
   className?: string;
 }
 
-export const Editor = ({cell, className, onChange}: EditorProps) => {
+export const Editor = ({value, className, onChange}: EditorProps) => {
   return (
     <EditorEl
-      value={cellValue(cell)}
+      value={value}
       onChange={(e) => onChange(e.target.value)}
       autoFocus={true}
       className={className}
@@ -29,12 +28,3 @@ const EditorEl = styled.input`
     outline: none;
   }
 `;
-
-const cellValue = (cell: Cell): string => {
-  switch (cell.type) {
-    case "empty": return "";
-    case "number": return String(cell.value);
-    case "formula": return cell.formula;
-    case "error": return cell.value;
-  }
-}

@@ -57,3 +57,12 @@ const mkFunc = (rawFormula: string): [FormulaFn, string[], string | undefined] =
 const extractParams = (formula: string): string[] => {
   return uniq(formula.match(/[A-Za-z_]\w*/g) || []);
 }
+
+export const cellDisplayValue = (cell: Cell): string => {
+  switch (cell.type) {
+    case "empty": return "";
+    case "number": return String(cell.value);
+    case "formula": return cell.formula;
+    case "error": return cell.value;
+  }
+}

@@ -1,7 +1,7 @@
 import React, { useCallback } from "react";
 import { useDispatch } from "react-redux";
 import styled from "styled-components";
-import { Cell, CellCoord, CellType } from "../app/cells/cells";
+import { Cell, CellCoord, cellDisplayValue, CellType } from "../app/cells/cells";
 import { selectCell, setCellValue } from "../app/cells/cellsSlice";
 import { editCell, extendFocus, focusCell, selectEditableCoord, selectFocusedRange } from "../app/focus";
 import { useAppSelector } from "../app/hooks";
@@ -34,7 +34,7 @@ export const CellView = ({coord}: CellViewProps) => {
     >
       {coord === editableCoord
         ? <Editor
-          cell={cell}
+          value={cellDisplayValue(cell)}
           onChange={(value) => dispatch(setCellValue({coord, value}))}
         />
         : <ValueView cell={cell} focused={coord === focusedRange[0]} selected={focusedRange.includes(coord)} />}

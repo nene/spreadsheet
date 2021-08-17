@@ -18,7 +18,8 @@ export type ErrorCell = {type: "error", value: string};
 
 export type Cell = NumberCell | FormulaCell | ErrorCell | EmptyCell;
 export type CellCoord = string; // like "A1", "C5", ...
-export type CellMap = Record<string, Cell | CellCoord>;
+export type CellRange = [CellCoord, CellCoord];
+export type CellMap = Record<string, Cell | CellCoord | CellRange>;
 
 export type CellType = "number" | "error" | "formula" | "empty";
 

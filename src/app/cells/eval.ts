@@ -1,19 +1,25 @@
 import { assoc, uniq } from "ramda";
-import { Cell, CellMap, CellCoord, FormulaFn, mkEmpty, NamedFormulaCell } from "./cells";
+import { Cell, CellMap, CellCoord, FormulaFn, mkEmpty, NamedFormulaCell, CellRange } from "./cells";
 
 export const getCell = (name: string | CellCoord, cells: CellMap): Cell => {
   const value = cells[name];
   if (isCellCoord(value)) {
     return getCell(value, cells);
+  } else if (isCellRange(value)) {
+    return getCell(value[0], cells); // TODO: properly handle ranges
   } else {
     return value || mkEmpty();
   }
 }
 
-const isCellCoord = (value: Cell | CellCoord): value is CellCoord =>
+const isCellCoord = (value: Cell | CellCoord | CellRange): value is CellCoord =>
   typeof value === "string";
 
-const isCell = (value: Cell | CellCoord): value is Cell => !isCellCoord(value);
+const isCellRange = (value: Cell | CellCoord | CellRange): value is CellRange =>
+  value instanceof Array;
+
+const isCell = (value: Cell | CellCoord | CellRange): value is Cell =>
+  !isCellCoord(value) && !isCellRange(value);
 
 export const isNamedFormula = (cell: Cell): cell is NamedFormulaCell =>
   cell.type === "formula" && cell.name !== undefined;

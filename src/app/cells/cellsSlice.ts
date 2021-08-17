@@ -35,3 +35,12 @@ export const { setCellValue, setCellRange } = cellsSlice.actions;
 export default cellsSlice.reducer;
 
 export const selectCell = (state: RootState, coord: CellCoord) => getCell(coord, state.cells);
+
+export const selectCellRangeName = (state: RootState, range: CellRange): string | undefined => {
+  for (const [k, v] of Object.entries(state.cells)) {
+    if (equals(v, range)) {
+      return k;
+    }
+  }
+  return undefined;
+}

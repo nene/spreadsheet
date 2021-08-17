@@ -1,7 +1,7 @@
 import { useDispatch } from "react-redux";
 import styled from "styled-components";
 import { cellDisplayValue } from "../app/cells/cells";
-import { selectCell, setCellValue } from "../app/cells/cellsSlice";
+import { setCellRange, selectCell, setCellValue, selectCellRangeName } from "../app/cells/cellsSlice";
 import { selectFocusedCoords } from "../app/focus";
 import { useAppSelector } from "../app/hooks";
 import { Editor } from "./Editor";
@@ -10,13 +10,20 @@ export const InfoPanel = () => {
   const dispatch = useDispatch();
   const [from, to] = useAppSelector(selectFocusedCoords);
   const cell = useAppSelector((state) => selectCell(state, from));
+  const rangeName = useAppSelector((state) => to ? selectCellRangeName(state, [from, to]) : undefined);
 
   return (
     <InfoArea>
       <CoordLabel>{from}:{to}</CoordLabel>
       <LongEditor
-        value={cellDisplayValue(cell)}
-        onChange={(value) => dispatch(setCellValue({coord: from, value}))}
+        value={rangeName || cellDisplayValue(cell)}
+        onChange={(value) => {
+          if (from && to) {
+            dispatch(setCellRange({name: value, range: [from, to]}))
+          } else {
+            dispatch(setCellValue({coord: from, value}));
+          }
+        }}
       />
     </InfoArea>
   );

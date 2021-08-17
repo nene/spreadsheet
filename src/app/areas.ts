@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { CellCoord, CellRange } from "./cells/cells";
+import { CellCoord } from "./cells/cells";
 import { destructCellCoord, makeCellCoord } from "./cells/coord";
 
 type Sides = {
@@ -14,9 +14,11 @@ const areasSlice = createSlice({
   name: 'areas',
   initialState: {} as AreasMap,
   reducers: {
-    setFocusArea(state, action: PayloadAction<CellRange>) {
-      const {x: x1, y: y1} = destructCellCoord(action.payload[0]);
-      const {x: x2, y: y2} = destructCellCoord(action.payload[1]);
+    setFocusArea(state, action: PayloadAction<[CellCoord] | [CellCoord, CellCoord]>) {
+      const [coord1, coord2] = action.payload;
+      const {x: x1, y: y1} = destructCellCoord(coord1);
+      const {x: x2, y: y2} = coord2 ? destructCellCoord(coord2) : {x: x1, y: y1};
+
       const result: AreasMap = {};
       for (let y = y1; y <= y2; y++) {
         for (let x = x1; x <= x2; x++) {

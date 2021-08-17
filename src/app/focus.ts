@@ -5,7 +5,7 @@ import { cellCoordRange, destructCellCoord, makeCellCoord } from "./cells/coord"
 import { RootState } from "./store";
 
 interface FocusState {
-  coords: CellCoord[];
+  coords: [CellCoord] | [CellCoord, CellCoord];
   editable: boolean;
 }
 
@@ -53,7 +53,7 @@ const coordPlus = (coord: CellCoord, delta: {x: number, y: number}): CellCoord =
 export const { focusCell, editCell, editFocusedCell, moveFocus, extendFocus } = focusSlice.actions;
 export default focusSlice.reducer;
 
-export const selectFocusedCoords = (state: RootState): CellCoord[] =>
+export const selectFocusedCoords = (state: RootState): [CellCoord] | [CellCoord, CellCoord] =>
   state.focus.coords;
 
 export const selectFocusedRange = createSelector(selectFocusedCoords, ([from, to]) => {

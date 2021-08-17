@@ -1,5 +1,5 @@
 import { createSelector, createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { max } from "ramda";
+import { max, min } from "ramda";
 import { CellCoord } from "./cells/cells";
 import { cellCoordRange, destructCellCoord, makeCellCoord } from "./cells/coord";
 import { RootState } from "./store";
@@ -36,8 +36,8 @@ const focusSlice = createSlice({
       }
       return {
         coords: [
-          makeCellCoord({x: Math.min(x1, x2), y: Math.min(y1, y2)}),
-          makeCellCoord({x: Math.max(x1, x2), y: Math.max(y1, y2)}),
+          makeCellCoord({x: min(x1, x2), y: min(y1, y2)}),
+          makeCellCoord({x: max(x1, x2), y: max(y1, y2)}),
         ],
         editable: false
       };

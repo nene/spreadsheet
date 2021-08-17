@@ -1,14 +1,15 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { CellCoord } from "./cells/cells";
 import { destructCellCoord, makeCellCoord } from "./cells/coord";
+import { RootState } from "./store";
 
-type Sides = {
+export type CellSides = {
   top?: boolean;
   bottom?: boolean;
   left?: boolean;
   right?: boolean;
 };
-type AreasMap = Record<CellCoord, Sides>;
+type AreasMap = Record<CellCoord, CellSides>;
 
 const areasSlice = createSlice({
   name: 'areas',
@@ -39,3 +40,5 @@ const areasSlice = createSlice({
 
 export const { setFocusArea } = areasSlice.actions;
 export default areasSlice.reducer;
+
+export const selectCellSides = (state: RootState, coord: CellCoord): CellSides => state.areas[coord] || {};

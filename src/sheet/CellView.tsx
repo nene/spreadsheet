@@ -4,7 +4,7 @@ import styled from "styled-components";
 import { selectCellSides } from "../app/focusAreas";
 import { Cell, CellCoord, cellDisplayValue, CellType } from "../app/cells/cells";
 import { selectCell, setCellValue } from "../app/cells/cellsSlice";
-import { editCell, extendFocus, focusCell, selectEditableCoord, selectFocusedCoords } from "../app/focus";
+import { editCell, extendFocus, focusCell, selectEditableCoord } from "../app/focus";
 import { useAppSelector } from "../app/hooks";
 import { Editor } from "./Editor";
 import { CellSides } from "../app/areaMap";
@@ -15,7 +15,6 @@ interface CellViewProps {
 
 export const CellView = ({coord}: CellViewProps) => {
   const cell = useAppSelector((state) => selectCell(state, coord));
-  const [focusedCoord] = useAppSelector(selectFocusedCoords);
   const editableCoord = useAppSelector(selectEditableCoord);
   const cellSides = useAppSelector((state) => selectCellSides(state, coord));
   const dispatch = useDispatch();
@@ -43,7 +42,6 @@ export const CellView = ({coord}: CellViewProps) => {
         : <ValueView
             cell={cell}
             sides={cellSides}
-            focused={coord === focusedCoord}
           />}
     </TableCell>
   );
@@ -54,14 +52,14 @@ const TableCell = styled.td`
   padding: 0;
 `;
 
-const ValueView = ({cell, sides, focused}: {cell: Cell, sides: CellSides, focused: boolean}) => (
-  <ValueEl cellType={cell.type} focused={focused} sides={sides}>
+const ValueView = ({cell, sides}: {cell: Cell, sides: CellSides}) => (
+  <ValueEl cellType={cell.type} sides={sides}>
     {cellLabel(cell) ? <Label>{cellLabel(cell)}</Label> : undefined}
     {cellValue(cell)}
   </ValueEl>
 );
 
-const ValueEl = styled.div<{cellType: CellType, focused: boolean, sides: CellSides}>`
+const ValueEl = styled.div<{cellType: CellType, sides: CellSides}>`
   position: relative;
   display: block;
   width: 70px;
@@ -72,7 +70,7 @@ const ValueEl = styled.div<{cellType: CellType, focused: boolean, sides: CellSid
   border-bottom-color: ${({cellType, sides}) => cellColor(cellType, !!sides.bottom)};
   border-left-color: ${({cellType, sides}) => cellColor(cellType, !!sides.left)};
   border-right-color: ${({cellType, sides}) => cellColor(cellType, !!sides.right)};
-  box-shadow: ${({focused}) => focused ? "1px 1px 4px #2c8b7c" : "none"};
+  box-shadow: ${({sides}) => isFocusedCell(sides) ? "1px 1px 4px #2c8b7c" : "none"};
   margin: 0;
   padding: 1px 2px;
 `;
@@ -88,6 +86,9 @@ const Label = styled.span`
   height: 11px;
   line-height: 11px;
 `;
+
+// Top-left cell is the currently focused cell
+const isFocusedCell = (sides: CellSides): boolean => Boolean(sides.left && sides.top);
 
 const cellLabel = (cell: Cell): string | undefined => {
   return cell.type === "formula" ? cell.name : undefined;

@@ -4,8 +4,7 @@ import { AppEpic, RootState } from "../store";
 import { updateCell } from "./updateCell";
 import { getCell } from "./eval";
 import { assoc, equals, pickBy, pipe } from "ramda";
-import { ofType } from "redux-observable";
-import { map } from "rxjs/operators";
+import { filter, map } from "rxjs/operators";
 import { setNamedArea } from "../areas";
 
 type CellsState = CellMap;
@@ -49,6 +48,6 @@ export const selectCellRangeName = (state: RootState, range: CellRange): string 
 }
 
 export const cellsEpic: AppEpic = (action$, state$) => action$.pipe(
-  ofType(setCellRange.type),
-  map((action) => setNamedArea((action as PayloadAction<{name: string, range: CellRange}>).payload)),
+  filter(setCellRange.match),
+  map((action) => setNamedArea(action.payload)),
 );

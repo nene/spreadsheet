@@ -65,5 +65,5 @@ export const selectEditableCoord = (state: RootState): CellCoord | undefined =>
 export const focusEpic: AppEpic = (action$, state$) => action$.pipe(
   ofType(extendFocus.type, focusCell.type, editCell.type, moveFocus.type, editFocusedCell.type),
   map(() => selectFocusedCoords(state$.value)),
-  map((coords: [string] | [string, string]) => setFocusArea(coords)),
+  map((coords) => setFocusArea(coords)),
 );

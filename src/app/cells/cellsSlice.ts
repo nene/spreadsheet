@@ -5,7 +5,7 @@ import { updateCell } from "./updateCell";
 import { getCell } from "./eval";
 import { assoc, equals, pickBy, pipe } from "ramda";
 import { filter, map } from "rxjs/operators";
-import { setNamedArea } from "../areas";
+import { setNamedArea } from "../namedAreas";
 
 type CellsState = CellMap;
 

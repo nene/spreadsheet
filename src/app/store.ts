@@ -3,6 +3,7 @@ import { combineEpics, createEpicMiddleware, Epic } from 'redux-observable';
 import focus, { focusEpic } from './focus';
 import cells, { cellsEpic } from './cells/cellsSlice';
 import areas from './areas';
+import namedAreas from './namedAreas';
 
 const epicMiddleWare = createEpicMiddleware<AnyAction, AnyAction, any>();
 
@@ -11,6 +12,7 @@ export const store = configureStore({
     cells,
     focus,
     areas,
+    namedAreas,
   },
   middleware: (getDefaultMiddleware) => [
     ...getDefaultMiddleware({

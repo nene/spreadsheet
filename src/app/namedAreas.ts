@@ -1,7 +1,8 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { equals } from "ramda";
-import { AreaMap, createAreaMap } from "./areaMap";
-import { CellRange } from "./cells/cells";
+import { AreaMap, CellSides, createAreaMap } from "./areaMap";
+import { CellCoord, CellRange } from "./cells/cells";
+import { RootState } from "./store";
 
 type NamedArea = {
   name: string;
@@ -46,3 +47,8 @@ const namedAreasSlice = createSlice({
 
 export const { setNamedArea } = namedAreasSlice.actions;
 export default namedAreasSlice.reducer;
+
+export const selectNamedAreaSides = (state: RootState, coord: CellCoord): CellSides => {
+  const area = state.namedAreas.find((area) => area.map[coord]);
+  return area ? area.map[coord] : {};
+};

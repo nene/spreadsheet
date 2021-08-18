@@ -1,11 +1,13 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { AreaMap } from "./areaMap";
+import { equals } from "ramda";
+import { AreaMap, createAreaMap } from "./areaMap";
 import { CellRange } from "./cells/cells";
 
 type NamedArea = {
   name: string;
-  area: AreaMap;
-}
+  range: CellRange;
+  map: AreaMap;
+};
 
 type NamedAreasState = NamedArea[];
 
@@ -14,7 +16,30 @@ const namedAreasSlice = createSlice({
   initialState: [] as NamedAreasState,
   reducers: {
     setNamedArea(state, action: PayloadAction<{name: string, range: CellRange}>) {
-      return state;
+      const {name, range} = action.payload;
+      const isExistingArea = (area: NamedArea) => equals(area.range, range);
+
+      if (name === "") {
+        return state.filter((area) => !isExistingArea(area));
+      }
+
+      if (state.some(isExistingArea)) {
+        return state.map((area) => {
+          if (isExistingArea(area)) {
+            return {...area, name};
+          }
+          return area;
+        });
+      } else {
+        return [
+          ...state,
+          {
+            name,
+            range,
+            map: createAreaMap(...range),
+          }
+        ];
+      }
     }
   }
 });

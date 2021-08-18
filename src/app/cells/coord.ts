@@ -19,19 +19,3 @@ export const numToAlpha = (n: number): string => {
 const alphaToNum = (c: string): number => {
   return "ABCDEFGHIJKLMNOPQRSTUVWXYZ".indexOf(c);
 }
-
-export const cellCoordRange = (from: CellCoord, to: CellCoord): CellCoord[] => {
-  const {x: x1, y: y1} = destructCellCoord(from);
-  const {x: x2, y: y2} = destructCellCoord(to);
-  if (x2 < x1 || y2 < y1) {
-    return [from, from];
-  }
-
-  const result: CellCoord[] = [];
-  for (let y = y1; y <= y2; y++) {
-    for (let x = x1; x <= x2; x++) {
-      result.push(makeCellCoord({x, y}));
-    }
-  }
-  return result;
-};

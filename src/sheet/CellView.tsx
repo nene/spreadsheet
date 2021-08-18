@@ -4,7 +4,7 @@ import styled from "styled-components";
 import { CellSides, selectCellSides } from "../app/areas";
 import { Cell, CellCoord, cellDisplayValue, CellType } from "../app/cells/cells";
 import { selectCell, setCellValue } from "../app/cells/cellsSlice";
-import { editCell, extendFocus, focusCell, selectEditableCoord, selectFocusedRange } from "../app/focus";
+import { editCell, extendFocus, focusCell, selectEditableCoord, selectFocusedCoords } from "../app/focus";
 import { useAppSelector } from "../app/hooks";
 import { Editor } from "./Editor";
 
@@ -14,7 +14,7 @@ interface CellViewProps {
 
 export const CellView = ({coord}: CellViewProps) => {
   const cell = useAppSelector((state) => selectCell(state, coord));
-  const focusedRange = useAppSelector(selectFocusedRange);
+  const [focusedCoord] = useAppSelector(selectFocusedCoords);
   const editableCoord = useAppSelector(selectEditableCoord);
   const cellSides = useAppSelector((state) => selectCellSides(state, coord));
   const dispatch = useDispatch();
@@ -42,7 +42,7 @@ export const CellView = ({coord}: CellViewProps) => {
         : <ValueView
             cell={cell}
             sides={cellSides}
-            focused={coord === focusedRange[0]}
+            focused={coord === focusedCoord}
           />}
     </TableCell>
   );

@@ -2,7 +2,7 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { max, min } from "ramda";
 import { ofType } from "redux-observable";
 import { map } from "rxjs/operators";
-import { setFocusArea } from "./areas";
+import { setFocusArea } from "./focusAreas";
 import { CellCoord } from "./cells/cells";
 import { destructCellCoord, makeCellCoord } from "./cells/coord";
 import { AppEpic, RootState } from "./store";

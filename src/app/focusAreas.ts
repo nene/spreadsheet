@@ -11,8 +11,8 @@ export type CellSides = {
 };
 type AreasMap = Record<CellCoord, CellSides>;
 
-const areasSlice = createSlice({
-  name: 'areas',
+const focusAreasSlice = createSlice({
+  name: 'focusAreas',
   initialState: {} as AreasMap,
   reducers: {
     setFocusArea(state, action: PayloadAction<[CellCoord] | [CellCoord, CellCoord]>) {
@@ -38,7 +38,7 @@ const areasSlice = createSlice({
   }
 });
 
-export const { setFocusArea } = areasSlice.actions;
-export default areasSlice.reducer;
+export const { setFocusArea } = focusAreasSlice.actions;
+export default focusAreasSlice.reducer;
 
-export const selectCellSides = (state: RootState, coord: CellCoord): CellSides => state.areas[coord] || {};
+export const selectCellSides = (state: RootState, coord: CellCoord): CellSides => state.focusAreas[coord] || {};

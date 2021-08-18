@@ -1,6 +1,6 @@
-import reducer, { setFocusArea } from './areas';
+import reducer, { setFocusArea } from './focusAreas';
 
-describe('areas reducer', () => {
+describe('focusAreas reducer', () => {
   describe('setFocusArea action', () => {
     it('with single coordinate fills just that cell', () => {
       expect(reducer({}, setFocusArea(['B2']))).toEqual({

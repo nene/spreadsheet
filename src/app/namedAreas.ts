@@ -9,9 +9,16 @@ export type CellSides = {
 };
 type AreasMap = Record<CellCoord, CellSides>;
 
+type NamedArea = {
+  name: string;
+  area: AreasMap;
+}
+
+type NamedAreasState = NamedArea[];
+
 const namedAreasSlice = createSlice({
   name: 'namedAreas',
-  initialState: {} as AreasMap,
+  initialState: [] as NamedAreasState,
   reducers: {
     setNamedArea(state, action: PayloadAction<{name: string, range: CellRange}>) {
       return state;

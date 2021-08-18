@@ -13,7 +13,7 @@ type AreasMap = Record<CellCoord, CellSides>;
 
 const focusAreasSlice = createSlice({
   name: 'focusAreas',
-  initialState: {} as AreasMap,
+  initialState: {A1: {top: true, left: true, right: true, bottom: true}} as AreasMap,
   reducers: {
     setFocusArea(state, action: PayloadAction<[CellCoord] | [CellCoord, CellCoord]>) {
       const [coord1, coord2] = action.payload;

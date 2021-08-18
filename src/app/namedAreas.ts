@@ -52,3 +52,11 @@ export const selectNamedAreaSides = (state: RootState, coord: CellCoord): CellSi
   const area = state.namedAreas.find((area) => area.map[coord]);
   return area ? area.map[coord] : {};
 };
+
+export const selectAreaName = (state: RootState, coord: CellCoord): string | undefined => {
+  const area = state.namedAreas.find((area) => isTopRight(area.map[coord]));
+  return area ? area.name : undefined;
+};
+
+// Area name is shown at top-right corner
+const isTopRight = (sides: CellSides = {}): boolean => Boolean(sides.top && sides.right);

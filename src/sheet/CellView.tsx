@@ -8,7 +8,7 @@ import { editCell, extendFocus, focusCell, selectEditableCoord } from "../app/fo
 import { useAppSelector } from "../app/hooks";
 import { Editor } from "./Editor";
 import { CellSides } from "../app/areaMap";
-import { selectNamedAreaSides } from "../app/namedAreas";
+import { selectAreaName, selectNamedAreaSides } from "../app/namedAreas";
 
 interface CellViewProps {
   coord: CellCoord;
@@ -19,6 +19,7 @@ export const CellView = ({coord}: CellViewProps) => {
   const editableCoord = useAppSelector(selectEditableCoord);
   const focusedCellSides = useAppSelector((state) => selectFocusedCellSides(state, coord));
   const namedSides = useAppSelector((state) => selectNamedAreaSides(state, coord));
+  const areaName = useAppSelector((state) => selectAreaName(state, coord));
   const dispatch = useDispatch();
 
   const onClick = useCallback((e: React.MouseEvent) => {
@@ -45,6 +46,7 @@ export const CellView = ({coord}: CellViewProps) => {
             cell={cell}
             focusedSides={focusedCellSides}
             namedSides={namedSides}
+            areaName={areaName}
           />}
     </TableCell>
   );
@@ -55,10 +57,11 @@ const TableCell = styled.td`
   padding: 0;
 `;
 
-const ValueView = ({cell, focusedSides, namedSides}: {cell: Cell, focusedSides: CellSides, namedSides: CellSides}) => (
-  <ValueEl cellType={cell.type} focusedSides={focusedSides} namedSides={namedSides}>
-    {cellLabel(cell) ? <Label>{cellLabel(cell)}</Label> : undefined}
-    {cellValue(cell)}
+const ValueView = (props: {cell: Cell, focusedSides: CellSides, namedSides: CellSides, areaName?: string}) => (
+  <ValueEl cellType={props.cell.type} focusedSides={props.focusedSides} namedSides={props.namedSides}>
+    {cellLabel(props.cell) ? <Label color="#2c8b7c">{cellLabel(props.cell)}</Label> : undefined}
+    {props.areaName ? <Label color="#b064ce">{props.areaName}</Label> : undefined}
+    {cellValue(props.cell)}
   </ValueEl>
 );
 
@@ -78,12 +81,12 @@ const ValueEl = styled.div<{cellType: CellType, focusedSides: CellSides, namedSi
   padding: 1px 2px;
 `;
 
-const Label = styled.span`
+const Label = styled.span<{color: string}>`
   position: absolute;
   top: 0;
   right: 0;
   color: #fff;
-  background-color: #2c8b7c;
+  background-color: ${(p) => p.color};
   font-size: 10px;
   padding: 0 2px;
   height: 11px;

@@ -1,7 +1,7 @@
 import React, { useCallback } from "react";
 import { useDispatch } from "react-redux";
 import styled from "styled-components";
-import { selectCellSides } from "../app/focusAreas";
+import { selectFocusedCellSides } from "../app/focusAreas";
 import { Cell, CellCoord, cellDisplayValue, CellType } from "../app/cells/cells";
 import { selectCell, setCellValue } from "../app/cells/cellsSlice";
 import { editCell, extendFocus, focusCell, selectEditableCoord } from "../app/focus";
@@ -16,7 +16,7 @@ interface CellViewProps {
 export const CellView = ({coord}: CellViewProps) => {
   const cell = useAppSelector((state) => selectCell(state, coord));
   const editableCoord = useAppSelector(selectEditableCoord);
-  const cellSides = useAppSelector((state) => selectCellSides(state, coord));
+  const focusedCellSides = useAppSelector((state) => selectFocusedCellSides(state, coord));
   const dispatch = useDispatch();
 
   const onClick = useCallback((e: React.MouseEvent) => {
@@ -41,7 +41,7 @@ export const CellView = ({coord}: CellViewProps) => {
         />
         : <ValueView
             cell={cell}
-            sides={cellSides}
+            focusedSides={focusedCellSides}
           />}
     </TableCell>
   );
@@ -52,25 +52,25 @@ const TableCell = styled.td`
   padding: 0;
 `;
 
-const ValueView = ({cell, sides}: {cell: Cell, sides: CellSides}) => (
-  <ValueEl cellType={cell.type} sides={sides}>
+const ValueView = ({cell, focusedSides}: {cell: Cell, focusedSides: CellSides}) => (
+  <ValueEl cellType={cell.type} focusedSides={focusedSides}>
     {cellLabel(cell) ? <Label>{cellLabel(cell)}</Label> : undefined}
     {cellValue(cell)}
   </ValueEl>
 );
 
-const ValueEl = styled.div<{cellType: CellType, sides: CellSides}>`
+const ValueEl = styled.div<{cellType: CellType, focusedSides: CellSides}>`
   position: relative;
   display: block;
   width: 70px;
   height: 20px;
   border-style: solid;
   border-width: 1px;
-  border-top-color: ${({cellType, sides}) => cellColor(cellType, !!sides.top)};
-  border-bottom-color: ${({cellType, sides}) => cellColor(cellType, !!sides.bottom)};
-  border-left-color: ${({cellType, sides}) => cellColor(cellType, !!sides.left)};
-  border-right-color: ${({cellType, sides}) => cellColor(cellType, !!sides.right)};
-  box-shadow: ${({sides}) => isFocusedCell(sides) ? "1px 1px 4px #2c8b7c" : "none"};
+  border-top-color: ${({cellType, focusedSides}) => cellColor(cellType, focusedSides.top)};
+  border-bottom-color: ${({cellType, focusedSides}) => cellColor(cellType, focusedSides.bottom)};
+  border-left-color: ${({cellType, focusedSides}) => cellColor(cellType, focusedSides.left)};
+  border-right-color: ${({cellType, focusedSides}) => cellColor(cellType, focusedSides.right)};
+  box-shadow: ${({focusedSides}) => isFocusedCell(focusedSides) ? "1px 1px 4px #2c8b7c" : "none"};
   margin: 0;
   padding: 1px 2px;
 `;
@@ -94,7 +94,7 @@ const cellLabel = (cell: Cell): string | undefined => {
   return cell.type === "formula" ? cell.name : undefined;
 };
 
-const cellColor = (type: CellType, focused: boolean): string => {
+const cellColor = (type: CellType, focused?: boolean): string => {
   if (focused) {
     return "#4b882e";
   }

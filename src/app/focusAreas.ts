@@ -17,4 +17,4 @@ const focusAreasSlice = createSlice({
 export const { setFocusArea } = focusAreasSlice.actions;
 export default focusAreasSlice.reducer;
 
-export const selectCellSides = (state: RootState, coord: CellCoord): CellSides => state.focusAreas[coord] || {};
+export const selectFocusedCellSides = (state: RootState, coord: CellCoord): CellSides => state.focusAreas[coord] || {};

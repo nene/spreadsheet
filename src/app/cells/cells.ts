@@ -1,6 +1,4 @@
-import { uniq } from "ramda";
-
-export type FormulaFn = (...args: number[]) => number;
+import { compileFormula, FormulaFn } from "./formula";
 
 export type NumberCell = {type: "number"; value: number};
 export type FormulaCell = {
@@ -37,25 +35,13 @@ export const mkCell = (s: string): Cell => {
   }
   if (/^([a-zA-Z_]\w*)?=.*$/.test(s)) {
     try {
-      const [fn, params, name] = mkFunc(s);
+      const {fn, params, name} = compileFormula(s);
       return mkFormula({formula: s, fn, params, value: undefined, name});
     } catch (e) {
       return mkError(s);
     }
   }
   return mkError(s);
-}
-
-const mkFunc = (rawFormula: string): [FormulaFn, string[], string | undefined] => {
-  const [name, formula] = rawFormula.split(/=/);
-  const params = extractParams(formula);
-  // eslint-disable-next-line no-new-func
-  const fn = new Function(...params, `return ${formula};`) as FormulaFn;
-  return [fn, params, name === "" ? undefined : name];
-};
-
-const extractParams = (formula: string): string[] => {
-  return uniq(formula.match(/[A-Za-z_]\w*/g) || []);
 }
 
 export const cellDisplayValue = (cell: Cell): string => {

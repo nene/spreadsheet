@@ -1,17 +1,10 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { CellCoord, CellRange } from "./cells/cells";
-
-export type CellSides = {
-  top?: boolean;
-  bottom?: boolean;
-  left?: boolean;
-  right?: boolean;
-};
-type AreasMap = Record<CellCoord, CellSides>;
+import { AreaMap } from "./areaMap";
+import { CellRange } from "./cells/cells";
 
 type NamedArea = {
   name: string;
-  area: AreasMap;
+  area: AreaMap;
 }
 
 type NamedAreasState = NamedArea[];

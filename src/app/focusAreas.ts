@@ -1,26 +1,19 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { AreaMap, CellSides } from "./areaMap";
 import { CellCoord } from "./cells/cells";
 import { destructCellCoord, makeCellCoord } from "./cells/coord";
 import { RootState } from "./store";
 
-export type CellSides = {
-  top?: boolean;
-  bottom?: boolean;
-  left?: boolean;
-  right?: boolean;
-};
-type AreasMap = Record<CellCoord, CellSides>;
-
 const focusAreasSlice = createSlice({
   name: 'focusAreas',
-  initialState: {A1: {top: true, left: true, right: true, bottom: true}} as AreasMap,
+  initialState: {A1: {top: true, left: true, right: true, bottom: true}} as AreaMap,
   reducers: {
     setFocusArea(state, action: PayloadAction<[CellCoord] | [CellCoord, CellCoord]>) {
       const [coord1, coord2] = action.payload;
       const {x: x1, y: y1} = destructCellCoord(coord1);
       const {x: x2, y: y2} = coord2 ? destructCellCoord(coord2) : {x: x1, y: y1};
 
-      const result: AreasMap = {};
+      const result: AreaMap = {};
       for (let y = y1; y <= y2; y++) {
         for (let x = x1; x <= x2; x++) {
           if (x === x1 || x === x2 || y === y1 || y === y2) {

@@ -1,12 +1,13 @@
 import React, { useCallback } from "react";
 import { useDispatch } from "react-redux";
 import styled from "styled-components";
-import { CellSides, selectCellSides } from "../app/focusAreas";
+import { selectCellSides } from "../app/focusAreas";
 import { Cell, CellCoord, cellDisplayValue, CellType } from "../app/cells/cells";
 import { selectCell, setCellValue } from "../app/cells/cellsSlice";
 import { editCell, extendFocus, focusCell, selectEditableCoord, selectFocusedCoords } from "../app/focus";
 import { useAppSelector } from "../app/hooks";
 import { Editor } from "./Editor";
+import { CellSides } from "../app/areaMap";
 
 interface CellViewProps {
   coord: CellCoord;

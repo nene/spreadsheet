@@ -1,6 +1,6 @@
 import { assoc, uniq } from "ramda";
 import { Cell, CellMap, CellCoord, mkEmpty, NamedFormulaCell, CellRange } from "./cells";
-import { FormulaFn } from "./formula";
+import { FormulaFn } from "../formula/formula";
 
 export const getCell = (name: string | CellCoord, cells: CellMap): Cell => {
   const value = cells[name];

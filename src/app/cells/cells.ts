@@ -1,4 +1,4 @@
-import { compileFormula, FormulaFn } from "./formula";
+import { compileFormula, FormulaFn } from "../formula/formula";
 
 export type NumberCell = {type: "number"; value: number};
 export type FormulaCell = {

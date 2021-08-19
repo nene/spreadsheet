@@ -60,7 +60,7 @@ const parseMulDivExpressionContinuation = (left: Expression, tokens: Token[]): [
   if (isMulDivToken(opTok)) {
     const operator = opTok.t;
     const [right, rest2] = parseTerm(rightTokens);
-    return parsePlusMinExpressionContinuation({type: 'binary-expression', left, operator, right}, rest2);
+    return parseMulDivExpressionContinuation({type: 'binary-expression', left, operator, right}, rest2);
   } else {
     return [left, tokens];
   }

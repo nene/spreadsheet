@@ -75,8 +75,8 @@ describe('parseFormula()', () => {
     });
   });
 
-  it('parses repeated expressions of same operator', () => {
-    expect(parseFormula('1 + 2 + 3')).toEqual({
+  it('parses repeated expressions of same-precedence operator: +, -', () => {
+    expect(parseFormula('1 + 2 - 3')).toEqual({
       type: 'binary-expression',
       left: {
           type: 'binary-expression',
@@ -84,7 +84,21 @@ describe('parseFormula()', () => {
           operator: '+',
           right: {type: 'number', value: 2},
       },
-      operator: '+',
+      operator: '-',
+      right: {type: 'number', value: 3},
+    });
+  });
+
+  it('parses repeated expressions of same-precedence operator: *, /', () => {
+    expect(parseFormula('1 * 2 / 3')).toEqual({
+      type: 'binary-expression',
+      left: {
+          type: 'binary-expression',
+          left: {type: 'number', value: 1},
+          operator: '*',
+          right: {type: 'number', value: 2},
+      },
+      operator: '/',
       right: {type: 'number', value: 3},
     });
   });

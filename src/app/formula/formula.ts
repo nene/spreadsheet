@@ -1,6 +1,8 @@
-import { uniq } from "ramda";
+import { extractParameters } from "./parameters";
+import { parseFormula } from "./parser";
+import { serializeFormula } from "./serializer";
 
-export type FormulaFn = (...args: number[]) => number;
+export type FormulaFn = (...args: any) => number;
 
 export type CompiledFormula = {
   fn: FormulaFn;
@@ -9,13 +11,11 @@ export type CompiledFormula = {
 };
 
 export const compileFormula = (src: string): CompiledFormula => {
-  const [name, formula] = src.split(/=/);
-  const params = extractParams(formula);
+  const [name, expressionString] = src.split(/=/);
+  const ast = parseFormula(expressionString);
+  const params = extractParameters(ast);
   // eslint-disable-next-line no-new-func
-  const fn = new Function(...params, `return ${formula};`) as FormulaFn;
+  const fn = new Function(...params, '$', serializeFormula(ast)) as FormulaFn;
+
   return {fn, params, name: name === "" ? undefined : name};
 };
-
-const extractParams = (src: string): string[] => {
-  return uniq(src.match(/[A-Za-z_]\w*/g) || []);
-}

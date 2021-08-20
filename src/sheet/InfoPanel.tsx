@@ -16,7 +16,7 @@ export const InfoPanel = () => {
     <InfoArea>
       <CoordLabel>{from}:{to}</CoordLabel>
       <LongEditor
-        value={rangeName || cellDisplayValue(cell)}
+        value={to ? rangeName || "" : cellDisplayValue(cell)}
         onChange={(value) => {
           if (from && to) {
             dispatch(setCellRange({name: value, range: [from, to]}))

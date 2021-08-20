@@ -2,10 +2,7 @@ import { assoc, uniq } from "ramda";
 import { Cell, CellMap, CellCoord, mkEmpty, NamedFormulaCell, CellRange } from "./cells";
 import { FormulaFn } from "../formula/formula";
 import { cellCoordsInRange } from "./coord";
-
-const builtinFunctions = {
-  sum: (xs: number[]) => xs.reduce((x,y) => x+y, 0),
-};
+import * as builtinFunctions from './builtins';
 
 export const getCellOrRef = (name: string | CellCoord, cells: CellMap): Cell | Cell[] => {
   const value = cells[name];

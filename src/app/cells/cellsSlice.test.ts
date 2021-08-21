@@ -224,6 +224,44 @@ describe('cells reducer', () => {
       });
     });
 
+    describe('when referenced named range updated', () => {
+      it.only('recomputes formula', () => {
+        expect(reducer({
+          A1: {type: 'number', value: 2},
+          A2: {type: 'number', value: 4},
+          A3: {type: 'number', value: 6},
+          A4: {type: 'number', value: 1},
+          prices: ['A1', 'A4'],
+          A5: {type: 'formula', formula: '=sum(prices)', params: ['prices'], fn: (prices, $) => $.sum(prices), value: 13},
+        }, setCellValue({coord: 'A2', value: '5'}))).toEqual({
+          A1: {type: 'number', value: 2},
+          A2: {type: 'number', value: 5},
+          A3: {type: 'number', value: 6},
+          A4: {type: 'number', value: 1},
+          prices: ['A1', 'A4'],
+          A5: {type: 'formula', formula: '=sum(prices)', params: ['prices'], fn: expect.any(Function), value: 14},
+        });
+      });
+
+      it('recomputes previously uncomputed formula', () => {
+        expect(reducer({
+          A1: {type: 'number', value: 2},
+          A2: {type: 'number', value: 4},
+          A3: {type: 'error', value: "Haha"},
+          A4: {type: 'number', value: 1},
+          prices: ['A1', 'A4'],
+          A5: {type: 'formula', formula: '=sum(prices)', params: ['prices'], fn: (prices, $) => $.sum(prices), value: undefined},
+        }, setCellValue({coord: 'A3', value: '20'}))).toEqual({
+          A1: {type: 'number', value: 2},
+          A2: {type: 'number', value: 4},
+          A3: {type: 'number', value: 20},
+          A4: {type: 'number', value: 1},
+          prices: ['A1', 'A4'],
+          A5: {type: 'formula', formula: '=sum(prices)', params: ['prices'], fn: expect.any(Function), value: 27},
+        });
+      });
+    });
+
     describe('when referenced field removed', () => {
       it('recomputes formula to undefined value', () => {
         expect(reducer({
@@ -247,6 +285,25 @@ describe('cells reducer', () => {
         }, setCellValue({coord: 'A1', value: ''}))).toEqual({
           A1: {type: 'empty'},
           B3: {type: 'formula', formula: '=foo+1', params: ['foo'], fn: expect.any(Function), value: undefined},
+        });
+      });
+    });
+
+    describe('when referenced named range removed', () => {
+      it('recomputes formula to undefined value', () => {
+        expect(reducer({
+          A1: {type: 'number', value: 2},
+          A2: {type: 'number', value: 4},
+          A3: {type: 'number', value: 20},
+          A4: {type: 'number', value: 1},
+          prices: ['A1', 'A4'],
+          A5: {type: 'formula', formula: '=sum(prices)', params: ['prices'], fn: (prices, $) => $.sum(prices), value: undefined},
+        }, setCellRange({name: '', range: ['A1', 'A4']}))).toEqual({
+          A1: {type: 'number', value: 2},
+          A2: {type: 'number', value: 4},
+          A3: {type: 'number', value: 20},
+          A4: {type: 'number', value: 1},
+          A5: {type: 'formula', formula: '=sum(prices)', params: ['prices'], fn: expect.any(Function), value: undefined},
         });
       });
     });

@@ -1,4 +1,4 @@
-import { assoc, uniq } from "ramda";
+import { assoc, max, uniq } from "ramda";
 import { Cell, CellMap, CellCoord, mkEmpty, NamedFormulaCell, CellRange } from "./cells";
 import { FormulaFn } from "../formula/formula";
 import { cellCoordsInRange } from "./coord";
@@ -54,8 +54,7 @@ const singleCellValue = (c: Cell): number => {
   }
 }
 
-export const evalCell = (coord: CellCoord, cells: CellMap): CellMap => {
-  const c = getCell(coord, cells);
+const evalSingleCell = (coord: CellCoord, c: Cell, cells: CellMap): CellMap => {
   if (c.type === "formula") {
     try {
       const args = c.params.map((name) => getCellValue(name, cells));
@@ -65,6 +64,17 @@ export const evalCell = (coord: CellCoord, cells: CellMap): CellMap => {
     }
   }
   return cells;
+}
+
+export const evalCell = (coord: string | CellCoord, cells: CellMap): CellMap => {
+  const c = getCellOrRef(coord, cells);
+  if (c instanceof Array) {
+    const range = cells[coord] as CellRange;
+    const coordList = cellCoordsInRange(range[0], range[1]);
+    return coordList.reduce((map, crd) => evalSingleCell(crd, getCell(crd, map), map), cells);
+  } else {
+    return evalSingleCell(coord, c, cells);
+  }
 }
 
 const callNumericFn = (fn: FormulaFn, args: (number|number[])[]): number => {
@@ -85,17 +95,30 @@ export const evalDeps = (name: string | CellCoord, cells: CellMap): CellMap => {
 }
 
 const findAllDeps = (name: string | CellCoord, cells: CellMap): string[] => {
-  const cell = getCell(name, cells);
-  return uniq([
-    // dependencies from cell coordinate
-    ...findDeps(name, cells),
-    // dependencies from formula name
-    ...(isNamedFormula(cell) ? findDeps(cell.name, cells) : [])
-  ]);
+  const cell = getCellOrRef(name, cells);
+  if (cell instanceof Array) {
+    // params referencing the named range
+    return uniq(findParamsReferencingName(name, cells));
+  } else {
+    return uniq([
+      // params referencing cell coordinate
+      ...findParamsReferencingName(name, cells),
+      // params referencing formula name
+      ...(isNamedFormula(cell) ? findParamsReferencingName(cell.name, cells) : []),
+      // ranges containing cell coordinate
+      ...findRangesContainingCell(name, cells),
+    ]);
+  }
 }
 
-const findDeps = (name: string | CellCoord, cells: CellMap): string[] => {
+const findParamsReferencingName = (name: string | CellCoord, cells: CellMap): string[] => {
   return Object.entries(cells)
     .filter(([k,c]) => isCell(c) && c.type === "formula" && c.params.some((p) => p === name))
     .map(([k,v]) => k);
 };
+
+const findRangesContainingCell = (name: CellCoord, cells: CellMap): string[] => {
+  return Object.entries(cells)
+    .filter(([l,c]) => isCellRange(c) && cellCoordsInRange(c[0], c[1]).includes(name))
+    .map(([k,c]) => k);
+}

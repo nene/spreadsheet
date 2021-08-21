@@ -1,4 +1,4 @@
-import { assoc, max, uniq } from "ramda";
+import { assoc, uniq } from "ramda";
 import { Cell, CellMap, CellCoord, mkEmpty, NamedFormulaCell, CellRange } from "./cells";
 import { FormulaFn } from "../formula/formula";
 import { cellCoordsInRange } from "./coord";

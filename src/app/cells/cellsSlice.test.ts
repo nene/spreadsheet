@@ -101,6 +101,23 @@ describe('cells reducer', () => {
           A3: {type: 'formula', formula: '=sum/count', params: ['sum', 'count'], fn: expect.any(Function), value: 8},
         });
       });
+
+      it('formula referencing named range -> computed value', () => {
+        expect(reducer({
+          A1: {type: 'number', value: 2},
+          A2: {type: 'number', value: 4},
+          A3: {type: 'number', value: 6},
+          A4: {type: 'number', value: 1},
+          prices: ['A1', 'A4'],
+        }, setCellValue({coord: 'A5', value: '=sum(prices)'}))).toEqual({
+          A1: {type: 'number', value: 2},
+          A2: {type: 'number', value: 4},
+          A3: {type: 'number', value: 6},
+          A4: {type: 'number', value: 1},
+          prices: ['A1', 'A4'],
+          A5: {type: 'formula', formula: '=sum(prices)', params: ['prices'], fn: expect.any(Function), value: 13},
+        });
+      });
     });
 
     describe('when referenced field updated', () => {
